@@ -3,7 +3,7 @@
 set -e
 
 SCRIPT_PATH=`readlink -f $0`
-export REPO_DIR=`dirname "${SCRIPT_PATH}"`
+REPO_DIR=`dirname "${SCRIPT_PATH}"`
 echo "Repository path: ${REPO_DIR}"
 export KERNEL_DIR="$REPO_DIR/linux"
 KERNEL_IMAGE="$KERNEL_DIR/arch/arm/boot/zImage"
@@ -27,6 +27,9 @@ fi
 
 kernel_config=onyx_defconfig
 initramfs_config=onyx_initramfs_defconfig
+
+sed "s|REPO_DIR|$REPO_DIR|" "$KERNEL_DIR/arch/arm/configs/${initramfs_config}.in" \
+    > "$KERNEL_DIR/arch/arm/configs/${initramfs_config}"
 
 cd "$REPO_DIR"/onyx/initramfs && make
 
