@@ -31,6 +31,7 @@ initramfs_config=onyx_initramfs_defconfig
 sed "s|REPO_DIR|$REPO_DIR|" "$KERNEL_DIR/arch/arm/configs/${initramfs_config}.in" \
     > "$KERNEL_DIR/arch/arm/configs/${initramfs_config}"
 
+cd "$REPO_DIR"/linux/usr && make gen_init_cpio
 cd "$REPO_DIR"/onyx/initramfs && make
 
 rm -rf "$ROOTFS_DIR"
