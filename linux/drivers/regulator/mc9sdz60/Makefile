@@ -1,0 +1,1 @@
+obj-$(CONFIG_REGULATOR_MC9SDZ60) += reg-mc9sdz60.o
