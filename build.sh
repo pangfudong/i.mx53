@@ -51,6 +51,3 @@ cp "$KERNEL_IMAGE" "$REPO_DIR/zImage-initramfs"
 ARCH=arm CROSS_COMPILE=arm-linux- make $kernel_config
 ARCH=arm CROSS_COMPILE=arm-linux- make zImage
 cp "$KERNEL_IMAGE" "$REPO_DIR/"
-
-rm -f "$REPO_DIR"/kernel_modules.tar.gz
-tar -czf "$REPO_DIR"/kernel_modules.tar.gz "$ROOTFS_DIR/lib"
