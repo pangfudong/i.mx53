@@ -44,7 +44,7 @@ ARCH=arm CROSS_COMPILE=arm-linux- make modules
 ARCH=arm CROSS_COMPILE=arm-linux- make modules_install INSTALL_MOD_PATH=$ROOTFS_DIR
 
 # Build zImage (with and without initramfs)
-cd $KERNEL_DIR
+cd "$KERNEL_DIR"
 ARCH=arm CROSS_COMPILE=arm-linux- make $initramfs_config
 ARCH=arm CROSS_COMPILE=arm-linux- make zImage
 cp "$KERNEL_IMAGE" "$REPO_DIR/zImage-initramfs"
@@ -52,4 +52,5 @@ ARCH=arm CROSS_COMPILE=arm-linux- make $kernel_config
 ARCH=arm CROSS_COMPILE=arm-linux- make zImage
 cp "$KERNEL_IMAGE" "$REPO_DIR/"
 
-tar -czf kernel_modules.tar.gz $ROOTFS_DIR/lib
+rm -f "$REPO_DIR"/kernel_modules.tar.gz
+tar -czf "$REPO_DIR"/kernel_modules.tar.gz "$ROOTFS_DIR/lib"
