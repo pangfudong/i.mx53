@@ -1,0 +1,94 @@
+# ====================================================================
+#
+#      spi.cdl
+#
+#      A Freescale MXC SPI package.
+#
+# ====================================================================
+#####ECOSGPLCOPYRIGHTBEGIN####
+## -------------------------------------------
+## This file is part of eCos, the Embedded Configurable Operating System.
+## Copyright (C) 1998, 1999, 2000, 2001, 2002, 2004 Red Hat, Inc.
+## Copyright (C) 2004 eCosCentric, Ltd
+##
+## eCos is free software; you can redistribute it and/or modify it under
+## the terms of the GNU General Public License as published by the Free
+## Software Foundation; either version 2 or (at your option) any later version.
+##
+## eCos is distributed in the hope that it will be useful, but WITHOUT ANY
+## WARRANTY; without even the implied warranty of MERCHANTABILITY or
+## FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+## for more details.
+##
+## You should have received a copy of the GNU General Public License along
+## with eCos; if not, write to the Free Software Foundation, Inc.,
+## 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
+##
+## As a special exception, if other files instantiate templates or use macros
+## or inline functions from this file, or you compile this file and link it
+## with other works to produce a work based on this file, this file does not
+## by itself cause the resulting work to be covered by the GNU General Public
+## License. However the source code for this file must still be made available
+## in accordance with section (3) of the GNU General Public License.
+##
+## This exception does not invalidate any other reasons why a work based on
+## this file might be covered by the GNU General Public License.
+##
+## -------------------------------------------
+#####ECOSGPLCOPYRIGHTEND####
+# ====================================================================
+######DESCRIPTIONBEGIN####
+#
+# Author(s):      Kevin Zhang
+# Contributors:
+# Date:           2006-08-23
+#
+#####DESCRIPTIONEND####
+# ====================================================================
+
+cdl_package CYGPKG_DEVS_MXC_SPI {
+    display     "SPI driver for FSL MXC-based platforms"
+
+    compile     -library=libextras.a mxc_spi.c
+
+    include_dir   cyg/io
+
+    cdl_option CYGHWR_DEVS_FSL_SPI_VER_XX {
+        display       "SPI for MX21/MX27 support"
+        default_value 0
+        description   " "
+        define_proc {
+            puts $::cdl_system_header "#define MXC_SPI_VER_XX"
+        }
+    }
+    cdl_option CYGHWR_DEVS_FSL_SPI_VER_0_4 {
+        display       "SPI version 0.4 support for MX31"
+        default_value 0
+        description   "
+            When this option is enabled, it indicates the SPI version
+            is 0.4"
+        define_proc {
+            puts $::cdl_system_header "#define MXC_SPI_VER_0_4"
+        }
+    }
+    cdl_option CYGHWR_DEVS_FSL_SPI_VER_0_7 {
+        display       "SPI version 0.7 support"
+        default_value 0
+        description   "
+            When this option is enabled, it indicates the SPI version
+            is 0.7"
+        define_proc {
+            puts $::cdl_system_header "#define MXC_SPI_VER_0_7"
+        }
+    }
+    cdl_option CYGHWR_DEVS_FSL_SPI_VER_2_3 {
+        display       "SPI version 2.3 support"
+        default_value 0
+        description   "
+            When this option is enabled, it indicates the SPI version
+            is 2.3"
+        define_proc {
+            puts $::cdl_system_header "#define MXC_SPI_VER_2_3"
+        }
+    }
+}
