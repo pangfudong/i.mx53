@@ -2,6 +2,32 @@
 
 set -e
 
+kernel_config=onyx_defconfig
+initramfs_config=onyx_initramfs_defconfig
+
+while [ $# -gt 0 ]
+do
+  case $1
+  in
+    --config-prefix)
+      CONFIG_PREFIX=$2
+      kernel_config="${CONFIG_PREFIX}_defconfig"
+      initramfs_config="${CONFIG_PREFIX}_initramfs_defconfig"
+      shift 2
+    ;;
+
+    *)
+      echo "Invalid arguement: $1"
+      echo "Valid arguments are"
+      echo "--config-prefix prefix: Prefix of the kernel config files."
+      exit 1
+    ;;
+  esac
+done
+
+echo "Using kernel config: $kernel_config"
+echo "Using initramfs config: $initramfs_config"
+
 SCRIPT_PATH=`readlink -f $0`
 REPO_DIR=`dirname "${SCRIPT_PATH}"`
 echo "Repository path: ${REPO_DIR}"
@@ -24,9 +50,6 @@ if [ ! -d "$REPO_DIR" ]; then
     echo "$REPO_DIR does not exist."
     exit 1
 fi
-
-kernel_config=onyx_defconfig
-initramfs_config=onyx_initramfs_defconfig
 
 sed "s|REPO_DIR|$REPO_DIR|" "$KERNEL_DIR/arch/arm/configs/${initramfs_config}.in" \
     > "$KERNEL_DIR/arch/arm/configs/${initramfs_config}"
