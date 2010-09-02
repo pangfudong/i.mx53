@@ -1,7 +1,7 @@
 all: initramfs.cpio
 
 initramfs.cpio: initramfs.conf
-	$(KERNEL_DIR)/usr/gen_init_cpio initramfs.conf > $@
+	$(REPO_DIR)/linux/usr/gen_init_cpio initramfs.conf > $@
 
 .PHONY:clean
 
