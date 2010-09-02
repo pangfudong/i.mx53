@@ -40,18 +40,18 @@
 /* 1504 OTG Control Register bits */
 #define USE_EXT_VBUS_IND	(1 << 7)	/* Use ext. Vbus indicator */
 #define DRV_VBUS_EXT		(1 << 6)	/* Drive Vbus external */
-#define DRV_VBUS		(1 << 5)	/* Drive Vbus */
-#define CHRG_VBUS		(1 << 4)	/* Charge Vbus */
+#define DRV_VBUS			(1 << 5)	/* Drive Vbus */
+#define CHRG_VBUS			(1 << 4)	/* Charge Vbus */
 #define DISCHRG_VBUS		(1 << 3)	/* Discharge Vbus */
 #define DM_PULL_DOWN		(1 << 2)	/* enable DM Pull Down */
 #define DP_PULL_DOWN		(1 << 1)	/* enable DP Pull Down */
-#define ID_PULL_UP		(1 << 0)	/* enable ID Pull Up */
+#define ID_PULL_UP			(1 << 0)	/* enable ID Pull Up */
 
 /* 1504 OTG Function Control Register bits */
-#define SUSPENDM		(1 << 6)	/* places the PHY into
-						   low-power mode      */
-#define DRV_RESET		(1 << 5)	/* Active HIGH transceiver
-						   reset                  */
+#define SUSPENDM			(1 << 6)	/* places the PHY into low-power mode */
+#define DRV_RESET			(1 << 5)	/* Active HIGH transceiver reset */
+
+#define FSL_ISP1504_WAIT_TIMEOUT 100	/* 1 second */
 
 /*!
  * read ULPI register 'reg' thru VIEWPORT register 'view'
@@ -63,21 +63,30 @@
 static u8 isp1504_read(int reg, volatile u32 *view)
 {
 	u32 data;
+	ulong timeout = jiffies + FSL_ISP1504_WAIT_TIMEOUT;
 
 	/* make sure interface is running */
 	if (!(__raw_readl(view) && ULPIVW_SS)) {
 		__raw_writel(ULPIVW_WU, view);
-		do {		/* wait for wakeup */
-			data = __raw_readl(view);
-		} while (data & ULPIVW_WU);
+
+		/* wait for wakeup */
+		while (__raw_readl(view) & ULPIVW_WU)
+		{
+			if (time_after(jiffies, timeout))
+				return 0xFF;
+		}
 	}
 
 	/* read the register */
 	__raw_writel((ULPIVW_RUN | (reg << ULPIVW_ADDR_SHIFT)), view);
 
-	do {			/* wait for completion */
-		data = __raw_readl(view);
-	} while (data & ULPIVW_RUN);
+	/* wait for completion */
+	timeout = jiffies + FSL_ISP1504_WAIT_TIMEOUT;
+	while (__raw_readl(view) & ULPIVW_RUN)
+	{
+		if (time_after(jiffies, timeout))
+			return 0xFF;
+	}
 
 	return (u8) (data >> ULPIVW_RDATA_SHIFT) & ULPIVW_RDATA_MASK;
 }
@@ -91,14 +100,18 @@ static u8 isp1504_read(int reg, volatile u32 *view)
  */
 static void isp1504_set(u8 bits, int reg, volatile u32 *view)
 {
-	u32 data;
+	ulong timeout = jiffies + FSL_ISP1504_WAIT_TIMEOUT;
 
 	/* make sure interface is running */
 	if (!(__raw_readl(view) && ULPIVW_SS)) {
 		__raw_writel(ULPIVW_WU, view);
-		do {		/* wait for wakeup */
-			data = __raw_readl(view);
-		} while (data & ULPIVW_WU);
+
+		/* wait for wakeup */
+		while (__raw_readl(view) & ULPIVW_WU)
+		{
+			if (time_after(jiffies, timeout))
+				return;
+		}
 	}
 
 	__raw_writel((ULPIVW_RUN | ULPIVW_WRITE |
@@ -106,8 +119,13 @@ static void isp1504_set(u8 bits, int reg, volatile u32 *view)
 		      ((bits & ULPIVW_WDATA_MASK) << ULPIVW_WDATA_SHIFT)),
 		     view);
 
-	while (__raw_readl(view) & ULPIVW_RUN)	/* wait for completion */
-		continue;
+	/* wait for completion */
+	timeout = jiffies + FSL_ISP1504_WAIT_TIMEOUT;
+	while (__raw_readl(view) & ULPIVW_RUN)
+	{
+		if (time_after(jiffies, timeout))
+			break;
+	}
 }
 
 /*!
@@ -119,13 +137,19 @@ static void isp1504_set(u8 bits, int reg, volatile u32 *view)
  */
 static void isp1504_clear(u8 bits, int reg, volatile u32 *view)
 {
+	ulong timeout = jiffies + FSL_ISP1504_WAIT_TIMEOUT;
 	__raw_writel((ULPIVW_RUN | ULPIVW_WRITE |
 		      ((reg + ISP1504_REG_CLEAR) << ULPIVW_ADDR_SHIFT) |
 		      ((bits & ULPIVW_WDATA_MASK) << ULPIVW_WDATA_SHIFT)),
 		     view);
 
-	while (__raw_readl(view) & ULPIVW_RUN)	/* wait for completion */
-		continue;
+	/* wait for completion */
+	timeout = jiffies + FSL_ISP1504_WAIT_TIMEOUT;
+	while (__raw_readl(view) & ULPIVW_RUN)
+	{
+		if (time_after(jiffies, timeout))
+			break;
+	}
 }
 
 extern int gpio_usbotg_hs_active(void);
@@ -194,12 +218,19 @@ static void isp1504_set_vbus_power(struct fsl_xcvr_ops *this,
  */
 static void isp1504_set_remote_wakeup(u32 * view)
 {
+	ulong timeout = jiffies + FSL_ISP1504_WAIT_TIMEOUT;
+
 	__raw_writel(~ULPIVW_WRITE & __raw_readl(view), view);
 	__raw_writel((1 << ULPIVW_PORT_SHIFT) | __raw_readl(view), view);
 	__raw_writel(ULPIVW_RUN | __raw_readl(view), view);
 
-	while (__raw_readl(view) & ULPIVW_RUN)	/* wait for completion */
-		continue;
+	/* wait for completion */
+	timeout = jiffies + FSL_ISP1504_WAIT_TIMEOUT;
+	while (__raw_readl(view) & ULPIVW_RUN)
+	{
+		if (time_after(jiffies, timeout))
+			break;
+	}
 }
 
 static void isp1504_init(struct fsl_xcvr_ops *this)
