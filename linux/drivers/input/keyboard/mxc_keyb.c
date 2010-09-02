@@ -276,6 +276,14 @@ static irqreturn_t mxc_gpio_interrupt(int irq, void* data)
 		}
 		else
 		{
+			if (gpio_keys[i].gpio_pin == MX31_PIN_SRXD5)
+			{
+				mxc_request_iomux(MX31_PIN_STXD5, OUTPUTCONFIG_GPIO, INPUTCONFIG_NONE);
+				mxc_set_gpio_direction(MX31_PIN_STXD5, 0);
+				mxc_set_gpio_dataout(MX31_PIN_STXD5, 0);
+				mxc_free_iomux(MX31_PIN_STXD5, OUTPUTCONFIG_GPIO, INPUTCONFIG_NONE);
+			}
+
 			input_event(mxckbd_dev, EV_KEY, gpio_keys[i].key_code, 0);
 			set_irq_type(gpio_keys[i].irq, IRQF_TRIGGER_RISING);
 		}
