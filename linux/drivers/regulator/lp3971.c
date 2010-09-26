@@ -292,6 +292,12 @@ static struct regulation_constraints dcdc1_regulation_constraints = {
 	.valid_ops_mask = REGULATOR_CHANGE_VOLTAGE,
 };
 
+static struct regulation_constraints dcdc2_regulation_constraints = {
+	.min_uV = mV_to_uV(800),
+	.max_uV = mV_to_uV(3300),
+	.valid_ops_mask = REGULATOR_CHANGE_VOLTAGE,
+};
+
 static struct regulator regulators[] = {
 	{
 		.name = "LDO1",
@@ -451,15 +457,17 @@ static int __devinit lp3971_i2c_probe(struct i2c_client *i2c,
 
 	regulator_set_platform_constraints("LDO4", &ldo4_regulation_constraints);
 	regulator_set_platform_constraints("DCDC1", &dcdc1_regulation_constraints);
+	regulator_set_platform_constraints("DCDC2", &dcdc2_regulation_constraints);
 
 	/* Initial voltage configuration for board */
 	regulators[2].use_count = 1;
 	regulator_disable(&regulators[2]);
 	regulator_set_voltage(&regulators[3], 1500000);
 	regulator_set_voltage(&regulators[5], 1500000);
+	regulator_set_voltage(&regulators[6], 3300000);
 
-	/* With TPS650244, V3.0_IO = 2.988V */
-	set_reference_voltage(2988);
+	/* With LP3971, V3.0_IO = 3.28V */
+	set_reference_voltage(3280);
 	return 0;
 
 unwind_reg:
