@@ -221,7 +221,7 @@ static int __init video_setup(char *options)
     }
 
     wfm_mode = (grayscale == 8 ? 3 : 2);
-    return 1;
+    return 0;
 }
 
 __setup("video=", video_setup);
