@@ -69,14 +69,6 @@ static int mx31_suspend_enter(suspend_state_t state)
  */
 static int mx31_suspend_prepare(void)
 {
-	struct regulator *reg_core;
-	reg_core = regulator_get(NULL, "DCDC1");
-	if (reg_core == NULL || IS_ERR(reg_core)) {
-		printk(KERN_ERR "Get regulator DCDC1 fail\n");
-		return 0;
-	}
-	regulator_set_voltage(reg_core, 1300000);
-	regulator_put(reg_core, NULL);
 	return 0;
 }
 
@@ -85,15 +77,6 @@ static int mx31_suspend_prepare(void)
  */
 static void mx31_suspend_finish(void)
 {
-	struct regulator *reg_core;
-	reg_core = regulator_get(NULL, "DCDC1");
-	if (reg_core == NULL || IS_ERR(reg_core)) {
-		printk(KERN_ERR "Get regulator DCDC1 fail\n");
-		return;
-	}
-	regulator_set_voltage(reg_core, 1500000);
-	regulator_put(reg_core, NULL);
-	return;
 }
 
 static int mx31_pm_valid(suspend_state_t state)
