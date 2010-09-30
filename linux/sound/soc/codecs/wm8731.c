@@ -122,8 +122,8 @@ static int wm8731_write(struct snd_soc_codec *codec, unsigned int reg,
 	/* for hpout, the volume can't reach 0x79 */
 	if ((reg == WM8731_LOUT1V || reg == WM8731_ROUT1V))
 	{
-		if (value > 0x72)
-			value = 0x72;
+		if (value > 0x5B)
+			value = 0x5B;
 	}
 
 	/* data is
