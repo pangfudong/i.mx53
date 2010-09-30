@@ -499,7 +499,7 @@ struct cpu_wp *get_cpu_wp(int *wp)
  * initialize __mach_desc_MX3_3STACK data structure.
  */
 /* *INDENT-OFF* */
-MACHINE_START(MX31_3DS, "Freescale MX31/MX32 3-Stack Board")
+MACHINE_START(MX31_3DS, "Freescale i.MX31L")
 	/* Maintainer: Freescale Semiconductor, Inc. */
 	.phys_io = AIPS1_BASE_ADDR,
 	.io_pg_offst = ((AIPS1_BASE_ADDR_VIRT) >> 18) & 0xfffc,
