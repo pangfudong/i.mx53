@@ -377,6 +377,8 @@ late_initcall(onyx_set_sys_entry);
 void machine_halt(void)
 {
 	struct regulator* reg_ldo5 = NULL;
+	int i;
+
 	if (clear_at_poweroff)
 	{
 		bs60_white();
@@ -389,19 +391,23 @@ void machine_halt(void)
 	/* Delay for a while, ensure Epson controller was properly closed. */
 	msleep(500);
 
-	reg_ldo5 = regulator_get(NULL, "LDO5");
-	if (reg_ldo5 != NULL && !IS_ERR(reg_ldo5))
+	for(i = 0; i < 5; ++i)
 	{
-		reg_ldo5->use_count = 1;
-		regulator_disable(reg_ldo5);
-		regulator_put(reg_ldo5, NULL);
-	}
+		printk("Try to shutdown device %d\n", i);
+		reg_ldo5 = regulator_get(NULL, "LDO5");
+		if (reg_ldo5 != NULL && !IS_ERR(reg_ldo5))
+		{
+			reg_ldo5->use_count = 1;
+			regulator_disable(reg_ldo5);
+			regulator_put(reg_ldo5, NULL);
+		}
 
-	/* Cut off power */
-	mxc_request_gpio(MX31_PIN_KEY_ROW6);
-	mxc_set_gpio_direction(MX31_PIN_KEY_ROW6, 0);
-	mxc_set_gpio_dataout(MX31_PIN_KEY_ROW6, 0);
-	mxc_iomux_set_pad(MX31_PIN_KEY_ROW6, PAD_CTL_PKE_NONE);
+		/* Cut off power */
+		mxc_request_gpio(MX31_PIN_KEY_ROW6);
+		mxc_set_gpio_direction(MX31_PIN_KEY_ROW6, 0);
+		mxc_set_gpio_dataout(MX31_PIN_KEY_ROW6, 0);
+		mxc_iomux_set_pad(MX31_PIN_KEY_ROW6, PAD_CTL_PKE_NONE);
+	}
 }
 
 void machine_power_off(void)
