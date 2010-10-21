@@ -763,13 +763,6 @@ static int imx_ssi_probe(struct device *dev)
 			return -EBUSY;
 		}
 
-	if ((!strcmp(imx_ssi_3, dai->name)) || (!strcmp(imx_ssi_4, dai->name)))
-		if (request_irq(MXC_INT_SSI2, ssi2_irq, 0, "ssi2", dai)) {
-			printk(KERN_ERR "%s: failure requesting irq %s\n",
-			       __func__, "ssi2");
-			return -EBUSY;
-		}
-
 	return 0;
 }
 
