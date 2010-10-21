@@ -160,11 +160,17 @@ static struct mtd_partition mxc_nand_partitions[] = {
 	 .name = "nand.configure",
 	 .offset = MTDPART_OFS_APPEND,
 	 .size = 32 * 1024 * 1024},
+#if defined(CONFIG_MTD_8G_NAND_FLASH)
+	{
+	 .name = "nand.firmware",
+	 .offset = MTDPART_OFS_APPEND,
+	 .size = 130 * 1024 * 1024},
+#endif
 	{
 	 .name = "nand.userfs",
 	 .offset = MTDPART_OFS_APPEND,
 #if defined(CONFIG_MTD_8G_NAND_FLASH)
-	 .size = 824 * 1024 * 1024},
+	 .size = 694 * 1024 * 1024},
 #else
 	 .size = 312 * 1024 * 1024},
 #endif

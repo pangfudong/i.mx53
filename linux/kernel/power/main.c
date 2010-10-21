@@ -276,8 +276,8 @@ static int suspend_enter(suspend_state_t state)
 {
 	int error = 0;
 
-	/* 180s for idle, 3 hours for standby */
-	start_epit(state == PM_SUSPEND_IDLE ? 180 : 3 * 3600);
+	/* 180s for idle, 1 hours for standby */
+	start_epit(state == PM_SUSPEND_IDLE ? 180 : 1 * 3600);
 	if (state == PM_SUSPEND_IDLE)
 		state = PM_SUSPEND_STANDBY;
 
