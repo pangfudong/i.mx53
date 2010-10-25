@@ -60,7 +60,7 @@ if [ ! -d "$REPO_DIR" ]; then
 fi
 
 echo "Updating password in ${INIT_SCRIPT_PATH}"
-sed "s/__AES_PASSWORD__/${aes_password}/" "${INIT_SCRIPT_PATH}"
+sed -i "s/__AES_PASSWORD__/${aes_password}/" "${INIT_SCRIPT_PATH}"
 
 sed "s|REPO_DIR|$REPO_DIR|" "$KERNEL_DIR/arch/arm/configs/${initramfs_config}.in" \
     > "$KERNEL_DIR/arch/arm/configs/${initramfs_config}"
