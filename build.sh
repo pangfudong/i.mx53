@@ -1,28 +1,35 @@
-#!/bin/bash -x
+#!/bin/bash
 
 set -e
 
 kernel_config=onyx_defconfig
 initramfs_config=onyx_initramfs_defconfig
+aes_password="a8wZ49?b"
 
 while [ $# -gt 0 ]
 do
-  case $1
-  in
-    --config-prefix)
-      CONFIG_PREFIX=$2
-      kernel_config="${CONFIG_PREFIX}_defconfig"
-      initramfs_config="${CONFIG_PREFIX}_initramfs_defconfig"
-      shift 2
-    ;;
+    case $1
+        in
+        --config-prefix)
+            CONFIG_PREFIX=$2
+            kernel_config="${CONFIG_PREFIX}_defconfig"
+            initramfs_config="${CONFIG_PREFIX}_initramfs_defconfig"
+            shift 2
+            ;;
 
-    *)
-      echo "Invalid arguement: $1"
-      echo "Valid arguments are"
-      echo "--config-prefix prefix: Prefix of the kernel config files."
-      exit 1
-    ;;
-  esac
+        --aes-password)
+            aes_password=$2
+            shift 2
+            ;;
+
+        *)
+            echo "Invalid arguement: $1"
+            echo "Valid arguments are"
+            echo "--config-prefix prefix: Prefix of the kernel config files."
+            echo "--aes-password password: the password used to encrypt update packages."
+            exit 1
+            ;;
+    esac
 done
 
 echo "Using kernel config: $kernel_config"
@@ -34,6 +41,7 @@ echo "Repository path: ${REPO_DIR}"
 export KERNEL_DIR="$REPO_DIR/linux"
 KERNEL_IMAGE="$KERNEL_DIR/arch/arm/boot/zImage"
 ROOTFS_DIR="$REPO_DIR/rootfs_patch"
+INIT_SCRIPT_PATH="$REPO_DIR/onyx/initramfs/init"
 
 # Configure options.
 export ONYX_SDK_ROOT=/opt/onyx/arm
@@ -50,6 +58,9 @@ if [ ! -d "$REPO_DIR" ]; then
     echo "$REPO_DIR does not exist."
     exit 1
 fi
+
+echo "Updating password in ${INIT_SCRIPT_PATH}"
+sed -i "s/__AES_PASSWORD__/${aes_password}/" "${INIT_SCRIPT_PATH}"
 
 sed "s|REPO_DIR|$REPO_DIR|" "$KERNEL_DIR/arch/arm/configs/${initramfs_config}.in" \
     > "$KERNEL_DIR/arch/arm/configs/${initramfs_config}"
@@ -74,3 +85,6 @@ cp "$KERNEL_IMAGE" "$REPO_DIR/zImage-initramfs"
 ARCH=arm CROSS_COMPILE=arm-linux- make $kernel_config
 ARCH=arm CROSS_COMPILE=arm-linux- make zImage
 cp "$KERNEL_IMAGE" "$REPO_DIR/"
+
+echo "Reverting change to ${INIT_SCRIPT_PATH}"
+git checkout "${INIT_SCRIPT_PATH}"

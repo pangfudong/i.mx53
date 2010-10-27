@@ -20,7 +20,7 @@ check_update()
     disp_msg /bin/extracting.dat
 
     # Decrypt the update package
-    aescrypt -d -p a8wZ49?b -o onyx_update.tgz $update_pkg
+    aescrypt -d -p __AES_PASSWORD__ -o onyx_update.tgz $update_pkg
 
     # Extracting files
     tar -zvxf onyx_update.tgz
@@ -49,7 +49,7 @@ normal_boot()
 {
   # Mount real rootfs
   mount -t yaffs2 /dev/mtdblock4 /newroot
-  
+
   # Check if there is a init script
   if [ -x "/newroot/${init}" ] ; then
     #Unmount all other mounts so that the ram used by
@@ -81,7 +81,7 @@ insmod /lib/modules/mxc_mmc.ko
 insmod /lib/modules/mmc_block.ko
 
 # Sleep 2 seconds here, wait for kernel to detect SD card
-sleep 2 
+sleep 2
 
 # Try to mount SD card first.
 mount -t vfat /dev/mmcblk0p1 /mnt/mmc
