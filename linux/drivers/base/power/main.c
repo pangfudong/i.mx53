@@ -25,6 +25,7 @@
 #include <linux/pm.h>
 #include <linux/resume-trace.h>
 #include <linux/rwsem.h>
+#include <linux/platform_device.h>
 
 #include "../base.h"
 #include "power.h"
@@ -413,6 +414,67 @@ int device_suspend(pm_message_t state)
 	return error;
 }
 EXPORT_SYMBOL_GPL(device_suspend);
+
+/**
+ *	suspend_specific_platform_device - Suspend a given platform device.
+ *	@name: the name of platform device
+ *	@state: new power management state
+ */
+int suspend_specific_platform_device(const char* name, pm_message_t state)
+{
+	int error = 0;
+	struct list_head *entry;
+
+	mutex_lock(&dpm_list_mtx);
+	list_for_each(entry, &dpm_active)
+	{
+		struct device *dev = to_device(entry);
+		if (dev->bus && strcmp(dev->bus->name, "platform") == 0)
+		{
+			struct platform_device *pdev = to_platform_device(dev);
+			if (strcmp(pdev->name, name) == 0)
+			{
+				/* Found specific platform device */
+				error = suspend_device(dev, state);
+				break;
+			}
+		}
+	}
+	mutex_unlock(&dpm_list_mtx);
+
+	return error;
+}
+EXPORT_SYMBOL_GPL(suspend_specific_platform_device);
+
+/**
+ *	resume_specific_platform_device - Resume a given platform device.
+ *	@name: the name of platform device
+ */
+int resume_specific_platform_device(const char* name)
+{
+	int error = 0;
+	struct list_head *entry;
+
+	mutex_lock(&dpm_list_mtx);
+	list_for_each(entry, &dpm_active)
+	{
+		struct device *dev = to_device(entry);
+		if (dev->bus && strcmp(dev->bus->name, "platform") == 0)
+		{
+			struct platform_device *pdev = to_platform_device(dev);
+			if (strcmp(pdev->name, name) == 0)
+			{
+				/* Found specific platform device */
+				error = resume_device(dev);
+				break;
+			}
+		}
+	}
+	mutex_unlock(&dpm_list_mtx);
+
+	return error;
+}
+EXPORT_SYMBOL_GPL(resume_specific_platform_device);
 
 void __suspend_report_result(const char *function, void *fn, int ret)
 {

@@ -195,6 +195,8 @@ extern void device_resume(void);
 #ifdef CONFIG_PM_SLEEP
 extern int device_suspend(pm_message_t state);
 extern int device_prepare_suspend(pm_message_t state);
+extern int suspend_specific_platform_device(const char* name, pm_message_t state);
+extern int resume_specific_platform_device(const char* name);
 
 extern void __suspend_report_result(const char *function, void *fn, int ret);
 

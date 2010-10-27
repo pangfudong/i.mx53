@@ -411,8 +411,6 @@ static int enter_state(suspend_state_t state)
 
 	if (state == PM_SUSPEND_IDLE)
 	{
-		u32 portsc;
-
 		/* Enable wakeup by keyboard/EPIT1/touchscreen/sd/usb */
 		enable_irq_wake(MXC_INT_KPP);
 		enable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_GPIO1_0));
@@ -423,14 +421,17 @@ static int enter_state(suspend_state_t state)
 
 		suspend_console();
 
-		/* Put usbh2 transceiver into low power mode */
-		portsc = readl(IO_ADDRESS(0x43F88584));
-		writel(portsc | (1 << 23), IO_ADDRESS(0x43F88584));
+		/* Put usbh2 transceiver into low power mode, this will save about 6mA */
+		suspend_specific_platform_device("fsl-ehci", PMSG_SUSPEND);
+
+		/* For issue: if there is a key pressed before entering idle mode,
+		   the keyboard will be disfunctional after resuming from idle. */
+		suspend_specific_platform_device("mxc_keypad", PMSG_SUSPEND);
 
 		suspend_enter(state);
 
-		/* Restore usbh2 transceiver to previous status */
-		writel(portsc, IO_ADDRESS(0x43F88584));
+		resume_specific_platform_device("mxc_keypad");
+		resume_specific_platform_device("fsl-ehci");
 
 		resume_console();
 
