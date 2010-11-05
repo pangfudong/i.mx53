@@ -463,7 +463,9 @@ static int __devinit lp3971_i2c_probe(struct i2c_client *i2c,
 	regulators[2].use_count = 1;
 	regulator_disable(&regulators[2]);
 	regulator_set_voltage(&regulators[3], 1500000);
-	regulator_set_voltage(&regulators[5], 1500000);
+
+	/* DCDC1 1.4V */
+	regulator_set_voltage(&regulators[5], 1400000);
 	regulator_set_voltage(&regulators[6], 3300000);
 
 	/* With LP3971, V3.0_IO = 3.28V */
