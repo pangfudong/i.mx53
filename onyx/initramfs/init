@@ -80,16 +80,31 @@ insmod /lib/modules/mmc_core.ko
 insmod /lib/modules/mxc_mmc.ko
 insmod /lib/modules/mmc_block.ko
 
-# Sleep 2 seconds here, wait for kernel to detect SD card
-sleep 2
+retry_count=0
+while [ $retry_count -lt 5 ]
+do
+  if [ -b "/dev/mmcblk0p1" ]; then
+    mount -t vfat /dev/mmcblk0p1 /mnt/mmc
+    if [ $? = 0 ]; then
+      break
+    fi
+  fi
+  sleep 1
+  retry_count=`expr $retry_count + 1`
+done
 
-# Try to mount SD card first.
-mount -t vfat /dev/mmcblk0p1 /mnt/mmc
-
-if [ $? = 0 ]; then
+if [ $retry_count -lt 5 ]; then
   check_update
   umount /mnt/mmc
+elif [ -b "/dev/mmcblk0" ]; then
+  mount -t vfat /dev/mmcblk0 /mnt/mmc
+  if [ $? = 0 ]; then
+    check_update
+    umount /mnt/mmc
+  fi
 else
+  # No sd card in slot
+  echo "Mount SD card failed"
   disp_msg /bin/no_updates.dat
 fi
 
