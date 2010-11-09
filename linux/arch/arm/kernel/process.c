@@ -407,6 +407,9 @@ void machine_halt(void)
 		mxc_set_gpio_direction(MX31_PIN_KEY_ROW6, 0);
 		mxc_set_gpio_dataout(MX31_PIN_KEY_ROW6, 0);
 		mxc_iomux_set_pad(MX31_PIN_KEY_ROW6, PAD_CTL_PKE_NONE);
+		mxc_free_gpio(MX31_PIN_KEY_ROW6);
+
+		msleep(100);
 	}
 }
 
