@@ -401,16 +401,15 @@ void machine_halt(void)
 			regulator_disable(reg_ldo5);
 			regulator_put(reg_ldo5, NULL);
 		}
-
-		/* Cut off power */
-		mxc_request_gpio(MX31_PIN_KEY_ROW6);
-		mxc_set_gpio_direction(MX31_PIN_KEY_ROW6, 0);
-		mxc_set_gpio_dataout(MX31_PIN_KEY_ROW6, 0);
-		mxc_iomux_set_pad(MX31_PIN_KEY_ROW6, PAD_CTL_PKE_NONE);
-		mxc_free_gpio(MX31_PIN_KEY_ROW6);
-
-		msleep(100);
 	}
+
+	/* Cut off power */
+	mxc_request_gpio(MX31_PIN_KEY_ROW6);
+	mxc_set_gpio_direction(MX31_PIN_KEY_ROW6, 0);
+	mxc_set_gpio_dataout(MX31_PIN_KEY_ROW6, 0);
+	mxc_iomux_set_pad(MX31_PIN_KEY_ROW6, PAD_CTL_PKE_NONE);
+
+	/* DON'T call mxc_free_gpio since it will pull up KPROW6 again */
 }
 
 void machine_power_off(void)
