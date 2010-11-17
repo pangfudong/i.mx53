@@ -245,7 +245,7 @@ static struct i2c_board_info mxc_i2c_board_info[] __initdata = {
 
 #if defined(CONFIG_MMC_MXC) || defined(CONFIG_MMC_MXC_MODULE)
 static struct mxc_mmc_platform_data mmc0_data = {
-	.ocr_mask = MMC_VDD_28_29,
+	.ocr_mask = MMC_VDD_29_30 | MMC_VDD_30_31,
 	.min_clk = 150000,
 	.max_clk = 25000000,
 	.card_inserted_state = 0,

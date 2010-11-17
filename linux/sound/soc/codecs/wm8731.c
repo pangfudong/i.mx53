@@ -119,11 +119,11 @@ static int wm8731_write(struct snd_soc_codec *codec, unsigned int reg,
 	u8 data[2];
 	struct wm8731_priv *wm8731 = codec->private_data;
 
-	/* for hpout, the volume can't reach 0x5B */
+	/* for hpout, the volume can't reach 0x72 */
 	if ((reg == WM8731_LOUT1V || reg == WM8731_ROUT1V))
 	{
-		if (value > 0x5B)
-			value = 0x5B;
+		if (value > 0x72)
+			value = 0x72;
 	}
 
 	/* data is
