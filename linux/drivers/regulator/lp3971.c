@@ -280,25 +280,19 @@ static struct regulator_ops lp3971_dcdc_ops = {
 	.set_voltage = lp3971_dcdc_set_voltage,
 };
 
-static struct regulation_constraints ldo2_regulation_constraints = {
+static struct regulation_constraints ldo123_regulation_constraints = {
 	.min_uV = mV_to_uV(1800),
 	.max_uV = mV_to_uV(3300),
 	.valid_ops_mask = REGULATOR_CHANGE_VOLTAGE,
 };
 
-static struct regulation_constraints ldo4_regulation_constraints = {
+static struct regulation_constraints ldo45_regulation_constraints = {
 	.min_uV = mV_to_uV(1000),
 	.max_uV = mV_to_uV(3300),
 	.valid_ops_mask = REGULATOR_CHANGE_VOLTAGE,
 };
 
-static struct regulation_constraints dcdc1_regulation_constraints = {
-	.min_uV = mV_to_uV(800),
-	.max_uV = mV_to_uV(3300),
-	.valid_ops_mask = REGULATOR_CHANGE_VOLTAGE,
-};
-
-static struct regulation_constraints dcdc2_regulation_constraints = {
+static struct regulation_constraints dcdc123_regulation_constraints = {
 	.min_uV = mV_to_uV(800),
 	.max_uV = mV_to_uV(3300),
 	.valid_ops_mask = REGULATOR_CHANGE_VOLTAGE,
@@ -461,14 +455,16 @@ static int __devinit lp3971_i2c_probe(struct i2c_client *i2c,
 		regulator_set_drvdata(&regulators[i], lp3971);
 	}
 
-	regulator_set_platform_constraints("LDO2", &ldo2_regulation_constraints);
-	regulator_set_platform_constraints("LDO4", &ldo4_regulation_constraints);
-	regulator_set_platform_constraints("DCDC1", &dcdc1_regulation_constraints);
-	regulator_set_platform_constraints("DCDC2", &dcdc2_regulation_constraints);
+	regulator_set_platform_constraints("LDO1", &ldo123_regulation_constraints);
+	regulator_set_platform_constraints("LDO2", &ldo123_regulation_constraints);
+	regulator_set_platform_constraints("LDO4", &ldo45_regulation_constraints);
+	regulator_set_platform_constraints("DCDC1", &dcdc123_regulation_constraints);
+	regulator_set_platform_constraints("DCDC2", &dcdc123_regulation_constraints);
 
 	/* Initial voltage configuration for board */
 	regulators[2].use_count = 1;
 	regulator_disable(&regulators[2]);
+	regulator_set_voltage(&regulators[0], 3300000);
 	regulator_set_voltage(&regulators[1], 3300000);
 	regulator_set_voltage(&regulators[3], 1500000);
 
