@@ -1,5 +1,3 @@
-#!/bin/sh
-
 accepted_pkgs="onyx_update.upd update.upd"
 init=/linuxrc
 

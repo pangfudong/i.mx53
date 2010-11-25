@@ -5,6 +5,7 @@ set -e
 kernel_config=onyx_defconfig
 initramfs_config=onyx_initramfs_defconfig
 aes_password="a8wZ49?b"
+init_config=default
 
 while [ $# -gt 0 ]
 do
@@ -22,11 +23,17 @@ do
             shift 2
             ;;
 
+        --init-config)
+            init_config=$2
+            shift 2
+            ;;
+
         *)
             echo "Invalid arguement: $1"
             echo "Valid arguments are"
             echo "--config-prefix prefix: Prefix of the kernel config files."
-            echo "--aes-password password: the password used to encrypt update packages."
+            echo "--aes-password password: The password used to encrypt update packages."
+            echo "--init-config name: The configuration to prepend to the init script."
             exit 1
             ;;
     esac
@@ -42,6 +49,8 @@ export KERNEL_DIR="$REPO_DIR/linux"
 KERNEL_IMAGE="$KERNEL_DIR/arch/arm/boot/zImage"
 ROOTFS_DIR="$REPO_DIR/rootfs_patch"
 INIT_SCRIPT_PATH="$REPO_DIR/onyx/initramfs/init"
+INIT_CONFIG_DIR="$REPO_DIR/onyx/initramfs.d"
+INIT_SCRIPT_MAIN_PATH="$INIT_CONFIG_DIR/init.in.sh"
 
 # Configure options.
 export ONYX_SDK_ROOT=/opt/onyx/arm
@@ -58,6 +67,11 @@ if [ ! -d "$REPO_DIR" ]; then
     echo "$REPO_DIR does not exist."
     exit 1
 fi
+
+echo "Generating ${INIT_SCRIPT_PATH} using configuration ${init_config}"
+echo "#!/bin/sh" > "${INIT_SCRIPT_PATH}"
+cat "${INIT_CONFIG_DIR}/${init_config}.conf.sh" >> "${INIT_SCRIPT_PATH}"
+cat "${INIT_SCRIPT_MAIN_PATH}" >> "${INIT_SCRIPT_PATH}"
 
 echo "Updating password in ${INIT_SCRIPT_PATH}"
 sed -i "s/__AES_PASSWORD__/${aes_password}/" "${INIT_SCRIPT_PATH}"
@@ -86,6 +100,3 @@ cp "$KERNEL_IMAGE" "$REPO_DIR/zImage-initramfs"
 ARCH=arm CROSS_COMPILE=arm-linux- make $kernel_config
 ARCH=arm CROSS_COMPILE=arm-linux- make zImage
 cp "$KERNEL_IMAGE" "$REPO_DIR/"
-
-echo "Reverting change to ${INIT_SCRIPT_PATH}"
-git checkout "${INIT_SCRIPT_PATH}"
