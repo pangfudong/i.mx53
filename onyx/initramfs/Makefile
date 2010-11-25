@@ -6,4 +6,4 @@ initramfs.cpio: initramfs.conf
 .PHONY:clean
 
 clean:
-	rm initramfs.cpio
+	rm -f initramfs.cpio
