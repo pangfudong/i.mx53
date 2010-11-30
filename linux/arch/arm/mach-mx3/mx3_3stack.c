@@ -386,10 +386,6 @@ static int mxc_init_audio(void)
 	}
 
 #if defined(CONFIG_SND_SOC_WM8731) || defined(CONFIG_SND_SOC_WM8731_MODULE)
-	/* Setup jack detect pin */
-	mxc_request_iomux(MX31_PIN_DTR_DCE1, OUTPUTCONFIG_GPIO, INPUTCONFIG_GPIO);
-	mxc_set_gpio_direction(MX31_PIN_DTR_DCE1, 1);
-
 	/* Setup speaker enable pin */
 	mxc_request_iomux(MX31_PIN_DTR_DCE2, OUTPUTCONFIG_GPIO, INPUTCONFIG_NONE);
 	mxc_set_gpio_direction(MX31_PIN_DTR_DCE2, 0);

@@ -32,6 +32,7 @@
 #include "../codecs/wm8731.h"
 
 extern void gpio_activate_audio_ports(void);
+extern void register_jack_notify(void (*handler)(int));
 
 /* SSI BCLK and LRC master */
 #define WM8731_SSI_MASTER	1
@@ -208,39 +209,32 @@ static int imx_3stack_wm8731_audio_resume(struct platform_device *dev)
 #define imx_3stack_wm8731_audio_resume	NULL
 #endif
 
-struct snd_soc_codec *g_codec = NULL;
+struct snd_soc_machine *g_machine = NULL;
 static void deferred_jack_func(struct work_struct *work)
 {
-	wm8731_jack_handler(g_codec, jack_status);
+	struct snd_soc_codec *codec;
+	struct snd_soc_pcm_link *pcm_link;
+
+	pcm_link = list_first_entry(&g_machine->active_list,
+				    struct snd_soc_pcm_link, active_list);
+
+	codec = pcm_link->codec;
+	wm8731_jack_handler(codec, jack_status);
 }
 static DECLARE_WORK(jack_event, deferred_jack_func);
 
-static void imx_3stack_update_widget(struct snd_soc_machine *machine)
+static void imx_3stack_update_widget(int new_status)
 {
-	snd_soc_dapm_set_endpoint(machine, "Headphone Jack", jack_status);
-	snd_soc_dapm_set_endpoint(machine, "Headset Jack", jack_status);
-	snd_soc_dapm_set_endpoint(machine, "Ext Spk", 1 - jack_status);
+	jack_status = new_status;
+	printk("%s: jack_status = %d\n", __FUNCTION__, new_status);
+
+	snd_soc_dapm_set_endpoint(g_machine, "Headphone Jack", jack_status);
+	snd_soc_dapm_set_endpoint(g_machine, "Headset Jack", jack_status);
+	snd_soc_dapm_set_endpoint(g_machine, "Ext Spk", 1 - jack_status);
 	mxc_set_gpio_dataout(MX31_PIN_DTR_DCE2, 1 - jack_status);
 
 	/* mute/unmute L(R)HPOUT according to jack status */
 	schedule_work(&jack_event);
-}
-
-static irqreturn_t imx_3stack_jack_handler(int irq, void *dev_id)
-{
-	struct snd_soc_machine *machine = (struct snd_soc_machine *)dev_id;
-	int val = mxc_get_gpio_datain(MX31_PIN_DTR_DCE1);
-
-	if (val != jack_status)
-	{
-		jack_status = val;
-		printk("%s: jack_status = %d\n", __FUNCTION__, val);
-		set_irq_type(irq, val ? IRQF_TRIGGER_FALLING : IRQF_TRIGGER_RISING);
-
-		imx_3stack_update_widget(machine);
-	}
-
-	return IRQ_HANDLED;
 }
 
 /* Defined in mx3_3stack.c */
@@ -271,25 +265,16 @@ static int mach_probe(struct snd_soc_machine *machine)
 					   audio_map[i][1], audio_map[i][2]);
 	}
 
-	g_codec = codec;
+	g_machine = machine;
 
 	jack_status = mxc_get_gpio_datain(MX31_PIN_DTR_DCE1);
 	printk("%s: jack_status = %d\n", __FUNCTION__, jack_status);
-	ret = request_irq(IOMUX_TO_IRQ(MX31_PIN_DTR_DCE1), imx_3stack_jack_handler,
-		jack_status ? IRQF_TRIGGER_FALLING : IRQF_TRIGGER_RISING,
-		imx_3stack_audio, machine);
-	if (ret)
-	{
-		printk(KERN_ERR "%s: failed to request irq for pin MX31_PIN_DTR_DCE1\n",
-		       __FUNCTION__);
-		snd_soc_machine_free(machine);
-		return ret;
-	}
+	register_jack_notify(imx_3stack_update_widget);
 
 	/* always enable mic widgets */
 	snd_soc_dapm_set_endpoint(machine, "Mic Jack", 1);
 	snd_soc_dapm_set_endpoint(machine, "Line Jack", 1);
-	imx_3stack_update_widget(machine);
+	imx_3stack_update_widget(jack_status);
 
 	snd_soc_dapm_set_policy(machine, SND_SOC_DAPM_POLICY_STREAM);
 	snd_soc_dapm_sync_endpoints(machine);
