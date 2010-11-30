@@ -1,5 +1,3 @@
-#!/bin/sh
-
 accepted_pkgs="onyx_update.upd update.upd"
 init=/linuxrc
 
@@ -29,7 +27,16 @@ check_update()
     # Do update.
     disp_msg /bin/updating.dat
     cd onyx_update
-    ./update.sh
+    if [ "$REQUIRED_CUSTOMER_ID" == "" ]; then
+        ./update.sh
+    else
+        if [ -f ./customer_id ]; then
+            pkg_id=`cat ./customer_id`
+            if [ $pkg_id = "$REQUIRED_CUSTOMER_ID" ]; then
+                ./update.sh
+            fi
+        fi
+    fi
 
     # Update complete, change display
     disp_msg /bin/booting.dat
