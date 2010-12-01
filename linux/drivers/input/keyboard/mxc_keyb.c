@@ -138,9 +138,17 @@ static struct gpio_key_map gpio_keys[] =
 	{ MX31_PIN_GPIO1_1,  KEY_F24 },    /* Wacom touch panel enable/disable */
 	{ MX31_PIN_KEY_ROW5, KEY_POWER },  /* Power key interrupt */
 	{ MX31_PIN_GPIO1_0,  KEY_F23 },    /* Wacom pen approaching interrupt */
+	{ MX31_PIN_DTR_DCE1, KEY_F22 },    /* Jack status */
 	{ MX31_PIN_KEY_ROW4, KEY_F21 },    /* USB connection indicator */
 	{ MX31_PIN_SRXD5,    KEY_F20 },    /* 3G power switch */
 };
+
+static void (*jack_handler)(int) = NULL;
+void register_jack_notify(void (*handler)(int))
+{
+	jack_handler = handler;
+}
+EXPORT_SYMBOL(register_jack_notify);
 
 static int lds6107_i2c_read(struct i2c_client* client, u16 reg, u16* rt_value)
 {
@@ -286,6 +294,12 @@ static irqreturn_t mxc_gpio_interrupt(int irq, void* data)
 
 			input_event(mxckbd_dev, EV_KEY, gpio_keys[i].key_code, 0);
 			set_irq_type(gpio_keys[i].irq, IRQF_TRIGGER_RISING);
+		}
+
+		if (gpio_keys[i].gpio_pin == MX31_PIN_DTR_DCE1)
+		{
+			if (jack_handler)
+				(*jack_handler)(val);
 		}
 	}
 
