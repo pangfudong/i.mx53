@@ -86,12 +86,6 @@ cd "$REPO_DIR"/onyx/initramfs && make
 rm -rf "$ROOTFS_DIR"
 mkdir "$ROOTFS_DIR"
 
-# Build kernel modules, and put them into rootfs
-cd $KERNEL_DIR
-ARCH=arm CROSS_COMPILE=arm-linux- make $kernel_config
-ARCH=arm CROSS_COMPILE=arm-linux- make modules
-ARCH=arm CROSS_COMPILE=arm-linux- make modules_install INSTALL_MOD_PATH=$ROOTFS_DIR
-
 # Build zImage (with and without initramfs)
 cd "$KERNEL_DIR"
 ARCH=arm CROSS_COMPILE=arm-linux- make $initramfs_config
@@ -100,3 +94,7 @@ cp "$KERNEL_IMAGE" "$REPO_DIR/zImage-initramfs"
 ARCH=arm CROSS_COMPILE=arm-linux- make $kernel_config
 ARCH=arm CROSS_COMPILE=arm-linux- make zImage
 cp "$KERNEL_IMAGE" "$REPO_DIR/"
+
+# Build kernel modules, and put them into rootfs
+ARCH=arm CROSS_COMPILE=arm-linux- make modules
+ARCH=arm CROSS_COMPILE=arm-linux- make modules_install INSTALL_MOD_PATH=$ROOTFS_DIR
