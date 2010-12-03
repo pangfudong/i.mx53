@@ -843,11 +843,11 @@ static irqreturn_t mxcmci_gpio_irq(int irq, void *devid)
 			mxcmci_data_done(host, STATUS_TIME_OUT_RESP);
 		}
 		enable_irq(host->irq);
-		mmc_detect_change(host->mmc, msecs_to_jiffies(50));
+		mmc_detect_change(host->mmc, msecs_to_jiffies(host->id == 1 ? 0 : 50));
 	}
 	else
 	{
-		mmc_detect_change(host->mmc, msecs_to_jiffies(100));
+		mmc_detect_change(host->mmc, msecs_to_jiffies(host->id == 1 ? 0 : 100));
 	}
 
 	do {
