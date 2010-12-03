@@ -138,7 +138,9 @@ static struct gpio_key_map gpio_keys[] =
 	{ MX31_PIN_GPIO1_1,  KEY_F24 },    /* Wacom touch panel enable/disable */
 	{ MX31_PIN_KEY_ROW5, KEY_POWER },  /* Power key interrupt */
 	{ MX31_PIN_GPIO1_0,  KEY_F23 },    /* Wacom pen approaching interrupt */
+#if defined(CONFIG_ENABLE_JACK_DETECT)
 	{ MX31_PIN_DTR_DCE1, KEY_F22 },    /* Jack status */
+#endif
 	{ MX31_PIN_KEY_ROW4, KEY_F21 },    /* USB connection indicator */
 	{ MX31_PIN_SRXD5,    KEY_F20 },    /* 3G power switch */
 };

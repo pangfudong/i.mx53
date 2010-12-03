@@ -35,6 +35,14 @@ config SND_SOC_IMX_3STACK_WM8731
    Say Y if you want to add support for SoC audio on IMX 3STACK
    with the WM8731.
 
+config ENABLE_JACK_DETECT
+ bool "Enable jack detect for IMX - WM8731"
+ depends on SND_SOC_IMX_3STACK_WM8731
+ help
+   Say Y if you want to enable jack detect for WM8731 on BOOX X
+   series. Note: Due to hardware issues, the maximum volume must
+   be limited to 0x72 to get this option work.
+
 config SND_SOC_IMX_3STACK_WM8711
  tristate "SoC Audio support for IMX - WM8711"
  select SND_MXC_SOC_SSI
