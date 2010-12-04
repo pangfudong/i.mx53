@@ -37,7 +37,9 @@ extern void register_jack_notify(void (*handler)(int));
 /* SSI BCLK and LRC master */
 #define WM8731_SSI_MASTER	1
 
+#if defined(CONFIG_ENABLE_JACK_DETECT)
 static int jack_status = 0;
+#endif
 
 struct imx_3stack_pcm_state {
 	int lr_clk_active;
@@ -209,6 +211,7 @@ static int imx_3stack_wm8731_audio_resume(struct platform_device *dev)
 #define imx_3stack_wm8731_audio_resume	NULL
 #endif
 
+#if defined(CONFIG_ENABLE_JACK_DETECT)
 struct snd_soc_machine *g_machine = NULL;
 static void deferred_jack_func(struct work_struct *work)
 {
@@ -236,6 +239,7 @@ static void imx_3stack_update_widget(int new_status)
 	/* mute/unmute L(R)HPOUT according to jack status */
 	schedule_work(&jack_event);
 }
+#endif
 
 /* Defined in mx3_3stack.c */
 extern const char imx_3stack_audio[32];
@@ -265,16 +269,22 @@ static int mach_probe(struct snd_soc_machine *machine)
 					   audio_map[i][1], audio_map[i][2]);
 	}
 
+	/* always enable mic widgets */
+	snd_soc_dapm_set_endpoint(machine, "Mic Jack", 1);
+	snd_soc_dapm_set_endpoint(machine, "Line Jack", 1);
+
+#if defined(CONFIG_ENABLE_JACK_DETECT)
 	g_machine = machine;
 
 	jack_status = mxc_get_gpio_datain(MX31_PIN_DTR_DCE1);
 	printk("%s: jack_status = %d\n", __FUNCTION__, jack_status);
 	register_jack_notify(imx_3stack_update_widget);
-
-	/* always enable mic widgets */
-	snd_soc_dapm_set_endpoint(machine, "Mic Jack", 1);
-	snd_soc_dapm_set_endpoint(machine, "Line Jack", 1);
 	imx_3stack_update_widget(jack_status);
+#else
+	snd_soc_dapm_set_endpoint(machine, "Headphone Jack", 1);
+	snd_soc_dapm_set_endpoint(machine, "Headset Jack", 1);
+	snd_soc_dapm_set_endpoint(machine, "Ext Spk", 0);
+#endif
 
 	snd_soc_dapm_set_policy(machine, SND_SOC_DAPM_POLICY_STREAM);
 	snd_soc_dapm_sync_endpoints(machine);
