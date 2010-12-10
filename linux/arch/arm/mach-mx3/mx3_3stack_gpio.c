@@ -403,15 +403,19 @@ void gpio_sdhc_active(int module)
 				   | PAD_CTL_100K_PU));
 		mxc_iomux_set_pad(MX31_PIN_SD1_DATA0,
 				  (PAD_CTL_DRV_HIGH | PAD_CTL_SRE_FAST
+				   | PAD_CTL_PKE_ENABLE | PAD_CTL_PUE_PUD
 				   | PAD_CTL_100K_PU));
 		mxc_iomux_set_pad(MX31_PIN_SD1_DATA1,
 				  (PAD_CTL_DRV_HIGH | PAD_CTL_SRE_FAST
+				   | PAD_CTL_PKE_ENABLE | PAD_CTL_PUE_PUD
 				   | PAD_CTL_100K_PU));
 		mxc_iomux_set_pad(MX31_PIN_SD1_DATA2,
 				  (PAD_CTL_DRV_HIGH | PAD_CTL_SRE_FAST
+				   | PAD_CTL_PKE_ENABLE | PAD_CTL_PUE_PUD
 				   | PAD_CTL_100K_PU));
 		mxc_iomux_set_pad(MX31_PIN_SD1_DATA3,
 				  (PAD_CTL_DRV_HIGH | PAD_CTL_SRE_FAST
+				   | PAD_CTL_PKE_ENABLE | PAD_CTL_PUE_PUD
 				   | PAD_CTL_100K_PU));
 		mxc_request_iomux(MX31_PIN_SIMPD0, OUTPUTCONFIG_GPIO,
 				  INPUTCONFIG_GPIO);
