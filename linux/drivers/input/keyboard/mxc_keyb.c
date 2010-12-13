@@ -298,11 +298,13 @@ static irqreturn_t mxc_gpio_interrupt(int irq, void* data)
 			set_irq_type(gpio_keys[i].irq, IRQF_TRIGGER_RISING);
 		}
 
+#if defined(CONFIG_ENABLE_JACK_DETECT)
 		if (gpio_keys[i].gpio_pin == MX31_PIN_DTR_DCE1)
 		{
 			if (jack_handler)
 				(*jack_handler)(val);
 		}
+#endif
 	}
 
 	return IRQ_RETVAL(1);
