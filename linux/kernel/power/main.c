@@ -424,7 +424,6 @@ static int enter_state(suspend_state_t state)
 		enable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_STX0));
 		enable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_SRXD5));
 		enable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_KEY_ROW4));
-		enable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_DTR_DCE1));
 
 		suspend_console();
 
@@ -448,7 +447,6 @@ static int enter_state(suspend_state_t state)
 		disable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_STX0));
 		disable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_SRXD5));
 		disable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_KEY_ROW4));
-		disable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_DTR_DCE1));
 		return 0;
 	}
 
