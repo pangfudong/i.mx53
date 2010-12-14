@@ -46,7 +46,9 @@
 /* codec private data */
 struct wm8731_priv {
 	unsigned int sysclk;
+#if defined(CONFIG_ENABLE_JACK_DETECT)
 	int jack;
+#endif
 };
 
 /*
@@ -87,6 +89,7 @@ static inline void wm8731_write_reg_cache(struct snd_soc_codec *codec,
 	cache[reg] = value;
 }
 
+#if defined(CONFIG_ENABLE_JACK_DETECT)
 void wm8731_jack_handler(struct snd_soc_codec *codec, int jack_status)
 {
 	u16 reg, value;
@@ -109,6 +112,7 @@ void wm8731_jack_handler(struct snd_soc_codec *codec, int jack_status)
 	}
 }
 EXPORT_SYMBOL(wm8731_jack_handler);
+#endif
 
 /*
  * write to the WM8731 register space
@@ -119,13 +123,6 @@ static int wm8731_write(struct snd_soc_codec *codec, unsigned int reg,
 	u8 data[2];
 	struct wm8731_priv *wm8731 = codec->private_data;
 
-	/* for hpout, the volume can't reach 0x72 */
-	if ((reg == WM8731_LOUT1V || reg == WM8731_ROUT1V))
-	{
-		if (value > 0x72)
-			value = 0x72;
-	}
-
 	/* data is
 	 *   D15..D9 WM8731 register offset
 	 *   D8...D0 register data
@@ -134,18 +131,22 @@ static int wm8731_write(struct snd_soc_codec *codec, unsigned int reg,
 	data[1] = value & 0x00ff;
 
 	wm8731_write_reg_cache(codec, reg, value);
+#if defined(CONFIG_ENABLE_JACK_DETECT)
 	if (wm8731->jack || (reg != WM8731_LOUT1V && reg != WM8731_ROUT1V))
+#endif
 	{
 		if (codec->mach_write(codec->control_data, (long)data, 2) == 2)
 			return 0;
 		else
 			return -EIO;
 	}
+#if defined(CONFIG_ENABLE_JACK_DETECT)
 	else
 	{
 		/* we don't support volume control for speaker */
 		return -EINVAL;
 	}
+#endif
 }
 
 #define wm8731_reset(c)	wm8731_write(c, WM8731_RESET, 0)
