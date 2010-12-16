@@ -1,0 +1,15 @@
+.\DebugInFlash\zy_if.o: .\ZY_CODE\zy_if\zy_if.c
+.\DebugInFlash\zy_if.o: .\ZY_CODE\zy_if\..\..\config.h
+.\DebugInFlash\zy_if.o: .\ZY_CODE\zy_if\..\..\.\ZY_CODE\firmware.h
+.\DebugInFlash\zy_if.o: C:\Keil\ARM\RV31\INC\ctype.h
+.\DebugInFlash\zy_if.o: C:\Keil\ARM\RV31\INC\stdlib.h
+.\DebugInFlash\zy_if.o: C:\Keil\ARM\RV31\INC\setjmp.h
+.\DebugInFlash\zy_if.o: C:\Keil\ARM\RV31\INC\rt_misc.h
+.\DebugInFlash\zy_if.o: .\ZY_CODE\zy_if\..\..\.\ZY_CODE\.\Startup\lpc1100.h
+.\DebugInFlash\zy_if.o: .\ZY_CODE\zy_if\..\..\.\ZY_CODE\.\Startup\target.h
+.\DebugInFlash\zy_if.o: .\ZY_CODE\zy_if\..\..\.\ZY_CODE\.\zy_if\zy_if.h
+.\DebugInFlash\zy_if.o: .\ZY_CODE\zy_if\..\..\.\cfg_file\target_cfg.h
+.\DebugInFlash\zy_if.o: .\ZY_CODE\zy_if\..\..\.\cfg_file\Startup\LPC1100PinCfg.h
+.\DebugInFlash\zy_if.o: C:\Keil\ARM\RV31\INC\stdio.h
+.\DebugInFlash\zy_if.o: .\ZY_CODE\zy_if\..\..\cfg_file\zy_if\zy_if_cfg.h
+.\DebugInFlash\zy_if.o: C:\Keil\ARM\RV31\INC\string.h

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="Windows-1252" ?>
+<TKStudioProject Name="Cortex-M0_Execute_for_lpc1100" BuildTool="15" Version="3.00" Author="YinHandong[Òüº®¶¬]">
+    <Configurations>
+        <Configuration Name="DebugInFlash" OP="0" XROM="0,0,0,0#0,0,0,0#0,0,0,0" XRAM="0,0,0,0#0,0,0,0#0,0,0,0" OldName="DebugInFlash" OutBig="0" McLib="0" CLK="12.000000" Cross="0" IROM="1,0x00000000,0x00008000,1#0,0,0,0" IRAM="1,0x10000000,0x00002000,0#0,0,0,0" OldCPU="LPC1114" OPTDBG="0,-1,1,0,1,1,(D:\Program Files\Zhiyuan Electronic\TKStudio\DRV\TKScope\UL2ARM_TKSCP_DRV_ARM_for_AGDI.dll)" DEVICE="LPC1114" VENDOR="NXP (founded by Philips)" FAMINY="3" SIMCLK="12.000000">
+            <MDK_Output OutName="1,.\DebugInFlash\LPC1100" OutType="1" OutBatch="0" OutHex="2" OutList="0,.\DebugInFlash" Debug="1" Browse="1" />
+            <MDK_User BfC="0,()#0,()" BfB="0,()#0,()" AfB="0,()#0,()" Beep="1" SDebug="0" />
+            <MDK_CParam Def="DEBUG __EVAL" uDef="" Inc="" Misc="" Opt="0,0" Code="0,0,0,0,0,0" Language="0,0,0,0" List="0" />
+            <MDK_AsmParam Def="__EVAL" uDef="" Inc="" Misc="" Code="0,0,0,0,0,0" Language="0" List="1,1" />
+            <MDK_Linker Misc="" UseDef="0" Code="0,0,0,1,()" Sct=".\cfg_file\Startup\InChip.sct" List="1,1,1,1,1,1,1,1,1" first="" Rom="0x00000000" Ram="0x10000000" />
+            <MDK_Debug DbgType="1" sfSIM="0,1,(),()" hwSIM="1,1,1,()" Drv="(AGDI 0),(D:\Program Files\Zhiyuan Electronic\TKStudio\DRV\TKScope\UL2ARM_TKSCP_DRV_ARM_for_AGDI.dll)" SrvOpt='-OP1798 -EP3276800 -VD131248 -IC0 -LM0 -IF0 -EF0 -VL0 -UT0 -UE0 -EO000 -EO0132768 -EO020 -EO030 -EO040 -EO050 -EO060 -EO070 -EO08268435456 -EO097936 -EO1026 -EO111200000 -EO12100000 -EO1350000000 -EO141000 -EO151200000 -EO1650 -EO17500 -EO18100610 -EO191200000 -EO200 -EO210 -EO223 -EO230 -FF0&quot;configuration\LPC11xx_IAP_32.flm&quot; -FF4&quot;configuration\LPC11xx.ini&quot;  -MM0V2T0S0E65535 -MM8V2T0S0E65535' />
+            <DeviceProperties Item0='BOOK0=DATASHTS\NXP\LPC1111_DS.PDF(&quot;Data Sheet&quot;)' Item1='BOOK1=DATASHTS\NXP\LPC11xx_UM.pdf(&quot;User Manual&quot;)' Item2='CPU=IRAM(0x10000000-0x10001FFF) IROM(0-0x7FFF) CLOCK(12000000) CPUTYPE(&quot;Cortex-M0&quot;)' Item3="FLDLL=UL2CM3(-O463 -S0 -C0 -FO7 -FD10000000 -FC800 -FN1 -FF0LPC_IAP_256 -FS00 -FL040000)" Item4='MON=SARMCM3.DLL(&quot;-MPU&quot;) TARMCM1.DLL(&quot;-pCortexM0&quot;)' Item5='REGFILE=LPC11xx.H(&quot;NXP&quot;)' Item6='SFILE=&quot;STARTUP\NXP\startup_LPC11xx.s&quot; (&quot;NXP LPC11xx Startup Code&quot;)' Item7='SIM=SARMCM3.DLL(&quot;-MPU&quot;)  DARMCM1.DLL(&quot;-pCortexM0&quot;)' />
+            <DeviceDescription Description=" * ARM Cortex-M0 processor, running at frequencies of up to 50 MHz.     &#x0D;&#x0A; * ARM Cortex-M0 built-in Nested Vectored Interrupt Controller (NVIC).  &#x0D;&#x0A; * 32kB(LPC1114),24kB(LPC1113),16kB(LPC1112),8kB(LPC1111) on-chip flash.&#x0D;&#x0A; * 8 kB, 4 kB, or 2 kB SRAM.                                            &#x0D;&#x0A; * In-System Programming (ISP) and In-Application Programming (IAP).    &#x0D;&#x0A; * Serial interfaces:                                                   &#x0D;&#x0A; - UART with fractional baud rate generation, internal FIFO           &#x0D;&#x0A; and RS-485 support.                                                &#x0D;&#x0A; - SSP controller with FIFO and multi-protocol capabilities.          &#x0D;&#x0A; - I2C-bus interface. " />
+        </Configuration>
+        <Configuration Name="Release" OP="0" XROM="0,0,0,0#0,0,0,0#0,0,0,0" XRAM="0,0,0,0#0,0,0,0#0,0,0,0" OldName="Release" OutBig="0" McLib="0" CLK="12.000000" Cross="0" IROM="1,0x00000000,0x00008000,1#0,0,0,0" IRAM="1,0x10000000,0x00002000,0#0,0,0,0" OldCPU="LPC1114" OPTDBG="0,-1,1,0,1,1,(C:\Keil\TKScope\UL2ARM_TKSCP_DRV_ARM_for_AGDI.dll)" DEVICE="LPC1114" VENDOR="NXP (founded by Philips)" FAMINY="3" SIMCLK="12.000000">
+            <MDK_Output OutName="1,.\Release\LPC1100" OutType="1" OutBatch="0" OutHex="2" OutList="0,.\Release" Debug="1" Browse="1" />
+            <MDK_User BfC="0,()#0,()" BfB="0,()#0,()" AfB="0,()#0,()" Beep="1" SDebug="0" />
+            <MDK_CParam Def="RELEASE __EVAL" uDef="" Inc="" Misc="" Opt="0,0" Code="0,0,0,0,0,0" Language="0,0,0,0" List="0" />
+            <MDK_AsmParam Def="__EVAL" uDef="" Inc="" Misc="" Code="0,0,0,0,0,0" Language="0" List="1,1" />
+            <MDK_Linker Misc="" UseDef="0" Code="0,0,0,1,()" Sct=".\cfg_file\Startup\InChip.sct" List="1,1,1,1,1,1,1,1,1" first="" Rom="0x00000000" Ram="0x10000000" />
+            <MDK_Debug DbgType="1" sfSIM="0,1,(),()" hwSIM="1,1,1,()" Drv="(AGDI 1239604),(C:\Keil\TKScope\UL2ARM_TKSCP_DRV_ARM_for_AGDI.dll)" SrvOpt='-OP1798 -EP3276800 -VD131248 -IC0 -LM0 -IF0 -EF0 -VL0 -UT0 -UE0 -EO000 -EO0132768 -EO020 -EO030 -EO040 -EO050 -EO060 -EO070 -EO08268435456 -EO097936 -EO1026 -EO111200000 -EO12100000 -EO1335000000 -EO141000 -EO151200000 -EO1630 -EO17300 -EO18116738 -EO191200000 -EO200 -EO210 -EO223 -EO230 -FF0&quot;configuration\LPC11xx_IAP_32.flm&quot;  -MM0V2T0S0E65535 -MM8V2T0S0E65535' />
+            <DeviceProperties Item0='BOOK0=DATASHTS\NXP\LPC1111_DS.PDF(&quot;Data Sheet&quot;)' Item1='BOOK1=DATASHTS\NXP\LPC11xx_UM.pdf(&quot;User Manual&quot;)' Item2='CPU=IRAM(0x10000000-0x10001FFF) IROM(0-0x7FFF) CLOCK(12000000) CPUTYPE(&quot;Cortex-M0&quot;)' Item3="FLDLL=UL2CM3(-O463 -S0 -C0 -FO7 -FD10000000 -FC800 -FN1 -FF0LPC_IAP_256 -FS00 -FL040000)" Item4='MON=SARMCM3.DLL(&quot;-MPU&quot;) TARMCM1.DLL(&quot;-pCortexM0&quot;)' Item5='REGFILE=LPC11xx.H(&quot;NXP&quot;)' Item6='SFILE=&quot;STARTUP\NXP\startup_LPC11xx.s&quot; (&quot;NXP LPC11xx Startup Code&quot;)' Item7='SIM=SARMCM3.DLL(&quot;-MPU&quot;)  DARMCM1.DLL(&quot;-pCortexM0&quot;)' />
+            <DeviceDescription Description=" * ARM Cortex-M0 processor, running at frequencies of up to 50 MHz.     &#x0D;&#x0A; * ARM Cortex-M0 built-in Nested Vectored Interrupt Controller (NVIC).  &#x0D;&#x0A; * 32kB(LPC1114),24kB(LPC1113),16kB(LPC1112),8kB(LPC1111) on-chip flash.&#x0D;&#x0A; * 8 kB, 4 kB, or 2 kB SRAM.                                            &#x0D;&#x0A; * In-System Programming (ISP) and In-Application Programming (IAP).    &#x0D;&#x0A; * Serial interfaces:                                                   &#x0D;&#x0A; - UART with fractional baud rate generation, internal FIFO           &#x0D;&#x0A; and RS-485 support.                                                &#x0D;&#x0A; - SSP controller with FIFO and multi-protocol capabilities.          &#x0D;&#x0A; - I2C-bus interface. " />
+        </Configuration>
+    </Configurations>
+    <Files>
+        <Filter Name="SOURCE FILE">
+            <Filter Name="USER_CODE">
+                <File RelativePath=".\USER_CODE\test.c" FileType="1" Output="test.o" ro="0" bss="0" rw="0">
+                    <Header RelativePath=".\USER_CODE\..\config.h" />
+                    <Header RelativePath=".\USER_CODE\..\.\ZY_CODE\firmware.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\ctype.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\stdlib.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\setjmp.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\rt_misc.h" />
+                    <Header RelativePath=".\USER_CODE\..\.\ZY_CODE\.\Startup\lpc1100.h" />
+                    <Header RelativePath=".\USER_CODE\..\.\ZY_CODE\.\Startup\target.h" />
+                    <Header RelativePath=".\USER_CODE\..\.\ZY_CODE\.\zy_if\zy_if.h" />
+                    <Header RelativePath=".\USER_CODE\..\.\cfg_file\target_cfg.h" />
+                    <Header RelativePath=".\USER_CODE\..\.\cfg_file\Startup\LPC1100PinCfg.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\stdio.h" />
+                    <Header RelativePath=".\USER_CODE\waltop.h" />
+                </File>
+                <File RelativePath=".\USER_CODE\mcu.c" FileType="1" Output="mcu.o" ro="0" bss="0" rw="0" />
+                <File RelativePath=".\USER_CODE\mcu.h" FileType="4" ro="0" bss="0" rw="0" />
+            </Filter>
+            <Filter Name="ZY_CODE">
+                <File RelativePath=".\ZY_CODE\firmware.h" FileType="4" ro="0" bss="0" rw="0" />
+                <File RelativePath=".\ZY_CODE\Startup\lpc1100.h" FileType="4" ro="0" bss="0" rw="0" />
+                <File RelativePath=".\ZY_CODE\Startup\LPC1100PinCfg.c" FileType="1" Output="LPC1100PinCfg.o" ro="0" bss="0" rw="0">
+                    <Header RelativePath=".\ZY_CODE\Startup\..\..\config.h" />
+                    <Header RelativePath=".\ZY_CODE\Startup\..\..\.\ZY_CODE\firmware.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\ctype.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\stdlib.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\setjmp.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\rt_misc.h" />
+                    <Header RelativePath=".\ZY_CODE\Startup\..\..\.\ZY_CODE\.\Startup\lpc1100.h" />
+                    <Header RelativePath=".\ZY_CODE\Startup\..\..\.\ZY_CODE\.\Startup\target.h" />
+                    <Header RelativePath=".\ZY_CODE\Startup\..\..\.\ZY_CODE\.\zy_if\zy_if.h" />
+                    <Header RelativePath=".\ZY_CODE\Startup\..\..\.\cfg_file\target_cfg.h" />
+                    <Header RelativePath=".\ZY_CODE\Startup\..\..\.\cfg_file\Startup\LPC1100PinCfg.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\stdio.h" />
+                </File>
+                <File RelativePath=".\ZY_CODE\Startup\target.c" FileType="1" Output="target.o" ro="0" bss="0" rw="0">
+                    <Header RelativePath=".\ZY_CODE\Startup\..\..\config.h" />
+                    <Header RelativePath=".\ZY_CODE\Startup\..\..\.\ZY_CODE\firmware.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\ctype.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\stdlib.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\setjmp.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\rt_misc.h" />
+                    <Header RelativePath=".\ZY_CODE\Startup\..\..\.\ZY_CODE\.\Startup\lpc1100.h" />
+                    <Header RelativePath=".\ZY_CODE\Startup\..\..\.\ZY_CODE\.\Startup\target.h" />
+                    <Header RelativePath=".\ZY_CODE\Startup\..\..\.\ZY_CODE\.\zy_if\zy_if.h" />
+                    <Header RelativePath=".\ZY_CODE\Startup\..\..\.\cfg_file\target_cfg.h" />
+                    <Header RelativePath=".\ZY_CODE\Startup\..\..\.\cfg_file\Startup\LPC1100PinCfg.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\stdio.h" />
+                </File>
+                <File RelativePath=".\ZY_CODE\Startup\target.h" FileType="4" ro="0" bss="0" rw="0" />
+                <File RelativePath=".\ZY_CODE\Startup\vector_table.c" FileType="1" Output="vector_table.o" ro="0" bss="0" rw="0">
+                    <Header RelativePath=".\ZY_CODE\Startup\..\..\config.h" />
+                    <Header RelativePath=".\ZY_CODE\Startup\..\..\.\ZY_CODE\firmware.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\ctype.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\stdlib.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\setjmp.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\rt_misc.h" />
+                    <Header RelativePath=".\ZY_CODE\Startup\..\..\.\ZY_CODE\.\Startup\lpc1100.h" />
+                    <Header RelativePath=".\ZY_CODE\Startup\..\..\.\ZY_CODE\.\Startup\target.h" />
+                    <Header RelativePath=".\ZY_CODE\Startup\..\..\.\ZY_CODE\.\zy_if\zy_if.h" />
+                    <Header RelativePath=".\ZY_CODE\Startup\..\..\.\cfg_file\target_cfg.h" />
+                    <Header RelativePath=".\ZY_CODE\Startup\..\..\.\cfg_file\Startup\LPC1100PinCfg.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\stdio.h" />
+                    <Header RelativePath=".\ZY_CODE\Startup\..\..\cfg_file\Startup\vector_cfg.h" />
+                </File>
+                <File RelativePath=".\ZY_CODE\zy_if\zy_if.c" FileType="1" Output="zy_if.o" ro="0" bss="0" rw="0">
+                    <Header RelativePath=".\ZY_CODE\zy_if\..\..\config.h" />
+                    <Header RelativePath=".\ZY_CODE\zy_if\..\..\.\ZY_CODE\firmware.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\ctype.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\stdlib.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\setjmp.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\rt_misc.h" />
+                    <Header RelativePath=".\ZY_CODE\zy_if\..\..\.\ZY_CODE\.\Startup\lpc1100.h" />
+                    <Header RelativePath=".\ZY_CODE\zy_if\..\..\.\ZY_CODE\.\Startup\target.h" />
+                    <Header RelativePath=".\ZY_CODE\zy_if\..\..\.\ZY_CODE\.\zy_if\zy_if.h" />
+                    <Header RelativePath=".\ZY_CODE\zy_if\..\..\.\cfg_file\target_cfg.h" />
+                    <Header RelativePath=".\ZY_CODE\zy_if\..\..\.\cfg_file\Startup\LPC1100PinCfg.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\stdio.h" />
+                    <Header RelativePath=".\ZY_CODE\zy_if\..\..\cfg_file\zy_if\zy_if_cfg.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\string.h" />
+                </File>
+                <File RelativePath=".\ZY_CODE\zy_if\zy_if.h" FileType="4" ro="0" bss="0" rw="0" />
+            </Filter>
+            <Filter Name="cfg_file">
+                <File RelativePath=".\cfg_file\target_cfg.h" FileType="4" ro="0" bss="0" rw="0" />
+                <File RelativePath=".\cfg_file\Startup\LPC1100PinCfg.h" FileType="4" ro="0" bss="0" rw="0" />
+                <File RelativePath=".\cfg_file\Startup\rt_sys_c.c" FileType="1" Output="rt_sys_c.o" ro="0" bss="0" rw="0">
+                    <Header RelativePath=".\cfg_file\Startup\..\..\config.h" />
+                    <Header RelativePath=".\cfg_file\Startup\..\..\.\ZY_CODE\firmware.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\ctype.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\stdlib.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\setjmp.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\rt_misc.h" />
+                    <Header RelativePath=".\cfg_file\Startup\..\..\.\ZY_CODE\.\Startup\lpc1100.h" />
+                    <Header RelativePath=".\cfg_file\Startup\..\..\.\ZY_CODE\.\Startup\target.h" />
+                    <Header RelativePath=".\cfg_file\Startup\..\..\.\ZY_CODE\.\zy_if\zy_if.h" />
+                    <Header RelativePath=".\cfg_file\Startup\..\..\.\cfg_file\target_cfg.h" />
+                    <Header RelativePath=".\cfg_file\Startup\..\..\.\cfg_file\Startup\LPC1100PinCfg.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\stdio.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\rt_sys.h" />
+                    <Header RelativePath="C:\Keil\ARM\RV31\INC\time.h" />
+                </File>
+                <File RelativePath=".\cfg_file\Startup\rt_sys_s.s" FileType="2" Output="rt_sys_s.o" ro="0" bss="0" rw="0" />
+                <File RelativePath=".\cfg_file\Startup\vector_cfg.h" FileType="4" ro="0" bss="0" rw="0" />
+                <File RelativePath=".\cfg_file\zy_if\zy_if_cfg.h" FileType="4" ro="0" bss="0" rw="0" />
+                <File RelativePath="config.h" FileType="4" ro="0" bss="0" rw="0" />
+            </Filter>
+        </Filter>
+    </Files>
+</TKStudioProject>

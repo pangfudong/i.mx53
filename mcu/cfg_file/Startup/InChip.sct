@@ -1,0 +1,25 @@
+ROM_LOAD 0x00000000
+{
+    VECTOR 0x00000000
+    {
+        vector_table.o (+RO)
+    }
+    ROM_EXEC 0x00000400 FIXED
+    {
+        *.o (+RO)
+    }
+
+    SRAM 0x10000000
+    {
+        * (+RW,+ZI)
+    }
+
+    HEAP +0 UNINIT
+    {
+        rt_sys_s.o (Heap)
+    }
+    SRAMEND 0x10002000  empty 0
+    {
+    
+    }
+}
