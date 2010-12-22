@@ -96,7 +96,13 @@ static int bq27510_battery_voltage(struct i2c_client *client)
 	else if (client->addr == ADC_I2C_ADDR)
 	{
 		ret = bq27510_read(ADC_REG_VOLT, &volt, 0, client);
-		volt = ((volt >> 4) & 0x00FF) * voltage_ref / 179;
+		volt = (volt >> 4) & 0x00FF;
+		if (volt < 186)
+		{
+			/* Workaroud: reference voltage will be dropped as battery voltage < 3.3V */
+			volt = 175;
+		}
+		volt = volt * voltage_ref / 179;
 	}
 
 	if (ret) {
