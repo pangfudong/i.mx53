@@ -251,6 +251,7 @@ static void bs60_white(void)
 
 static int clear_at_poweroff = 1;
 static int watchdog_on = 0;
+extern int epit_timeout;
 
 static ssize_t clear_at_poweroff_show(struct kobject *kobj,
 	struct kobj_attribute *attr, char *buf)
@@ -330,18 +331,22 @@ static ssize_t watchdog_show(struct kobject *kobj,
 static ssize_t watchdog_store(struct kobject *kobj,
 	struct kobj_attribute *attr, const char *buf, size_t n)
 {
-	int val;
+	if (sscanf(buf, "%d", &clear_at_poweroff) == 1) {
+		return n;
+	}
+	return -EINVAL;
+}
 
-	if (sscanf(buf, "%d", &val) == 1) {
-		watchdog_on = !!val;
-		if (watchdog_on)
-		{
-			start_watchdog();
-		}
-		else
-		{
-			stop_watchdog();
-		}
+static ssize_t epit_timeout_show(struct kobject *kobj,
+	struct kobj_attribute *attr, char *buf)
+{
+	return sprintf(buf, "%d\n", epit_timeout);
+}
+
+static ssize_t epit_timeout_store(struct kobject *kobj,
+	struct kobj_attribute *attr, const char *buf, size_t n)
+{
+	if (sscanf(buf, "%d", &epit_timeout) == 1) {
 		return n;
 	}
 	return -EINVAL;
@@ -349,10 +354,12 @@ static ssize_t watchdog_store(struct kobject *kobj,
 
 onyx_attr(clear_at_poweroff);
 onyx_attr(watchdog);
+onyx_attr(epit_timeout);
 
 static struct attribute * g[] = {
 	&clear_at_poweroff_attr.attr,
 	&watchdog_attr.attr,
+	&epit_timeout_attr.attr,
 	NULL
 };
 

@@ -266,6 +266,9 @@ static void stop_epit(void)
 	disable_irq_wake(MXC_INT_EPIT1);
 }
 
+int epit_timeout = 180;
+EXPORT_SYMBOL(epit_timeout);
+
 /**
  *	suspend_enter - enter the desired system sleep state.
  *	@state:		state to enter
@@ -278,10 +281,10 @@ static int suspend_enter(suspend_state_t state)
 
 #if defined(CONFIG_MTD_8G_NAND_FLASH)
 	/* 180s for idle, 1 hours for standby, for elisa only */
-	start_epit(state == PM_SUSPEND_IDLE ? 180 : 1 * 3600);
+	start_epit(state == PM_SUSPEND_IDLE ? epit_timeout : 1 * 3600);
 #else
 	/* 180s for idle, 6 hours for standby */
-	start_epit(state == PM_SUSPEND_IDLE ? 180 : 6 * 3600);
+	start_epit(state == PM_SUSPEND_IDLE ? epit_timeout : 6 * 3600);
 #endif
 
 	if (state == PM_SUSPEND_IDLE)
