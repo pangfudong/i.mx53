@@ -433,9 +433,6 @@ static int enter_state(suspend_state_t state)
 
 		suspend_console();
 
-		/* Put usbh2 transceiver into low power mode, this will save about 6mA */
-		suspend_specific_platform_device("fsl-ehci", PMSG_SUSPEND);
-
 		/* For issue: if there is a key pressed before entering idle mode,
 		   the keyboard will be disfunctional after resuming from idle. */
 		suspend_specific_platform_device("mxc_keypad", PMSG_SUSPEND);
@@ -443,7 +440,6 @@ static int enter_state(suspend_state_t state)
 		suspend_enter(state);
 
 		resume_specific_platform_device("mxc_keypad");
-		resume_specific_platform_device("fsl-ehci");
 
 		resume_console();
 
