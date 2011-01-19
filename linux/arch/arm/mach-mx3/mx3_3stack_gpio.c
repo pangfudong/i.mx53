@@ -168,7 +168,7 @@ u32 get_gpio_irq(iomux_pin_name_t pin, unsigned long* trigger_flag)
 	int val;
 
 	mxc_request_iomux(pin, OUTPUTCONFIG_GPIO, INPUTCONFIG_GPIO);
-	if (pin != MX31_PIN_DTR_DCE1)
+	if ((pin != MX31_PIN_DTR_DCE1) && (pin != MX31_PIN_KEY_ROW4))
 		mxc_iomux_set_pad(pin, PAD_CTL_PKE_NONE);
 	mxc_set_gpio_direction(pin, 1);
 	val = mxc_get_gpio_datain(pin);
