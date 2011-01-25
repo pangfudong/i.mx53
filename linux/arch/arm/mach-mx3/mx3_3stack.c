@@ -441,7 +441,7 @@ static void __init mxc_board_init(void)
 	mxc_request_iomux(MX31_PIN_USB_BYP, OUTPUTCONFIG_GPIO,
 			  INPUTCONFIG_NONE);
 	mxc_set_gpio_direction(MX31_PIN_USB_BYP, 0);
-	mxc_set_gpio_dataout(MX31_PIN_USB_BYP, 0);
+	mxc_set_gpio_dataout(MX31_PIN_USB_BYP, 1);
 	mxc_free_iomux(MX31_PIN_USB_BYP, OUTPUTCONFIG_GPIO, INPUTCONFIG_NONE);
 
 	mxc_init_keypad();
