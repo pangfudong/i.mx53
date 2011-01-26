@@ -327,10 +327,13 @@ int suspend_devices_and_enter(suspend_state_t state)
 			goto Close;
 	}
 	suspend_console();
-	error = device_suspend(PMSG_SUSPEND);
-	if (error) {
-		printk(KERN_ERR "PM: Some devices failed to suspend\n");
-		goto Resume_console;
+	if (state != PM_SUSPEND_IDLE)
+	{
+		error = device_suspend(PMSG_SUSPEND);
+		if (error) {
+			printk(KERN_ERR "PM: Some devices failed to suspend\n");
+			goto Resume_console;
+		}
 	}
 
 	if (suspend_test(TEST_DEVICES))
@@ -350,7 +353,34 @@ int suspend_devices_and_enter(suspend_state_t state)
 	{
 		enable_irq_wake(MXC_INT_KPP);
 		enable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_KEY_ROW5));
+		if (state == PM_SUSPEND_IDLE)
+		{
+			/* Enable wakeup by EPIT1/touchscreen/sd/usb/jack */
+			enable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_GPIO1_0));
+			enable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_STX0));
+			enable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_SRXD5));
+			enable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_KEY_ROW4));
+#if defined(CONFIG_ENABLE_JACK_DETECT)
+			enable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_DTR_DCE1));
+#endif
+			/* For issue: if there is a key pressed before entering idle mode,
+			   the keyboard will be disfunctional after resuming from idle. */
+			suspend_specific_platform_device("mxc_keypad", PMSG_SUSPEND);
+		}
+
 		suspend_enter(state);
+
+		if (state == PM_SUSPEND_IDLE)
+		{
+			resume_specific_platform_device("mxc_keypad");
+			disable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_GPIO1_0));
+			disable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_STX0));
+			disable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_SRXD5));
+			disable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_KEY_ROW4));
+#if defined(CONFIG_ENABLE_JACK_DETECT)
+			disable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_DTR_DCE1));
+#endif
+		}
 		disable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_KEY_ROW5));
 		disable_irq_wake(MXC_INT_KPP);
 	}
@@ -360,7 +390,10 @@ int suspend_devices_and_enter(suspend_state_t state)
 	if (suspend_ops->finish)
 		suspend_ops->finish();
  Resume_devices:
-	device_resume();
+ 	if (state != PM_SUSPEND_IDLE)
+ 	{
+		device_resume();
+	}
  Resume_console:
 	resume_console();
  Close:
@@ -401,6 +434,7 @@ static inline int valid_state(suspend_state_t state)
 	return 1;
 }
 
+
 /**
  *	enter_state - Do common work of entering low-power state.
  *	@state:		pm_state structure for state we're entering.
@@ -418,54 +452,20 @@ static int enter_state(suspend_state_t state)
 	if (!valid_state(state))
 		return -ENODEV;
 
-	if (state == PM_SUSPEND_IDLE)
-	{
-		/* Enable wakeup by keyboard/EPIT1/touchscreen/sd/usb/jack */
-		enable_irq_wake(MXC_INT_KPP);
-		enable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_GPIO1_0));
-		enable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_KEY_ROW5));
-		enable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_STX0));
-		enable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_SRXD5));
-		enable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_KEY_ROW4));
-#if defined(CONFIG_ENABLE_JACK_DETECT)
-		enable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_DTR_DCE1));
-#endif
-
-		suspend_console();
-
-		/* For issue: if there is a key pressed before entering idle mode,
-		   the keyboard will be disfunctional after resuming from idle. */
-		suspend_specific_platform_device("mxc_keypad", PMSG_SUSPEND);
-
-		suspend_enter(state);
-
-		resume_specific_platform_device("mxc_keypad");
-
-		resume_console();
-
-		disable_irq_wake(MXC_INT_KPP);
-		disable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_GPIO1_0));
-		disable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_KEY_ROW5));
-		disable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_STX0));
-		disable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_SRXD5));
-		disable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_KEY_ROW4));
-#if defined(CONFIG_ENABLE_JACK_DETECT)
-		disable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_DTR_DCE1));
-#endif
-		return 0;
-	}
-
 	if (!mutex_trylock(&pm_mutex))
 		return -EBUSY;
 
-	printk(KERN_INFO "PM: Syncing filesystems ... ");
-	sys_sync();
-	printk("done.\n");
+	if (state != PM_SUSPEND_IDLE)
+	{
+		printk(KERN_INFO "PM: Syncing filesystems ... ");
+		sys_sync();
+		printk("done.\n");
 
-	pr_debug("PM: Preparing system for %s sleep\n", pm_states[state]);
-	error = suspend_prepare();
-	if (error)
-		goto Unlock;
+		pr_debug("PM: Preparing system for %s sleep\n", pm_states[state]);
+		error = suspend_prepare();
+		if (error)
+			goto Unlock;
+	}
 
 	if (suspend_test(TEST_FREEZER))
 		goto Finish;
@@ -474,8 +474,11 @@ static int enter_state(suspend_state_t state)
 	error = suspend_devices_and_enter(state);
 
  Finish:
-	pr_debug("PM: Finishing wakeup.\n");
-	suspend_finish();
+ 	if (state != PM_SUSPEND_IDLE)
+ 	{
+		pr_debug("PM: Finishing wakeup.\n");
+		suspend_finish();
+	}
  Unlock:
 	mutex_unlock(&pm_mutex);
 	return error;
