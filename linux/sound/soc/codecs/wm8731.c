@@ -550,33 +550,6 @@ static int wm8731_dai_probe(struct device *dev)
     return snd_soc_register_codec_dai(dai);
 }
 
-static int wm8731_suspend(struct device *dev, pm_message_t state)
-{
-    struct snd_soc_codec *codec = to_snd_soc_codec(dev);
-
-	wm8731_write(codec, WM8731_ACTIVE, 0x0);
-	wm8731_dapm_event(codec, SNDRV_CTL_POWER_D3cold);
-	return 0;
-}
-
-static int wm8731_resume(struct device *dev)
-{
-    struct snd_soc_codec *codec = to_snd_soc_codec(dev);
-	int i;
-	u8 data[2];
-	u16 *cache = codec->reg_cache;
-
-	/* Sync reg_cache with the hardware */
-	for (i = 0; i < ARRAY_SIZE(wm8731_reg); i++) {
-		data[0] = (i << 1) | ((cache[i] >> 8) & 0x0001);
-		data[1] = cache[i] & 0x00ff;
-		codec->mach_write(codec->control_data, (long)data, 2);
-	}
-	wm8731_dapm_event(codec, SNDRV_CTL_POWER_D3hot);
-	wm8731_dapm_event(codec, codec->suspend_dapm_state);
-	return 0;
-}
-
 static int wm8731_codec_io_probe(struct snd_soc_codec *codec,
     struct snd_soc_machine *machine)
 {
@@ -661,6 +634,33 @@ err:
 	return ret;
 }
 
+static int wm8731_codec_suspend(struct i2c_client *client, pm_message_t state)
+{
+	struct snd_soc_codec *codec = i2c_get_clientdata(client);
+
+	wm8731_write(codec, WM8731_ACTIVE, 0x0);
+	wm8731_dapm_event(codec, SNDRV_CTL_POWER_D3cold);
+	return 0;
+}
+
+static int wm8731_codec_resume(struct i2c_client *client)
+{
+	struct snd_soc_codec *codec = i2c_get_clientdata(client);
+	int i;
+	u8 data[2];
+	u16 *cache = codec->reg_cache;
+
+	/* Sync reg_cache with the hardware */
+	for (i = 0; i < ARRAY_SIZE(wm8731_reg); i++) {
+		data[0] = (i << 1) | ((cache[i] >> 8) & 0x0001);
+		data[1] = cache[i] & 0x00ff;
+		codec->mach_write(codec->control_data, (long)data, 2);
+	}
+	wm8731_dapm_event(codec, SNDRV_CTL_POWER_D3hot);
+	wm8731_dapm_event(codec, codec->suspend_dapm_state);
+	return 0;
+}
+
 static int wm8731_codec_remove(struct i2c_client *client)
 {
 	struct snd_soc_codec *codec = i2c_get_clientdata(client);
@@ -680,6 +680,8 @@ static struct i2c_driver wm8731_i2c_driver = {
 		.owner = THIS_MODULE,
 	},
 	.probe = wm8731_codec_probe,
+	.suspend = wm8731_codec_suspend,
+	.resume = wm8731_codec_resume,
 	.remove = wm8731_codec_remove,
 	.id_table = wm8731_id,
 };
@@ -742,8 +744,6 @@ static struct snd_soc_device_driver wm8731_codec_driver =
 		.bus		= &asoc_bus_type,
 		.probe		= wm8731_probe,
 		.remove		= __devexit_p(wm8731_remove),
-		.suspend	= wm8731_suspend,
-		.resume		= wm8731_resume,
     },
 };
 
