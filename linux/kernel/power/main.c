@@ -23,6 +23,7 @@
 #include <linux/syscalls.h>
 #include <linux/interrupt.h>
 #include <linux/clk.h>
+#include <linux/regulator/regulator.h>
 #include <../arch/arm/mach-mx3/mx31_pins.h>
 
 #include "power.h"
@@ -351,6 +352,8 @@ int suspend_devices_and_enter(suspend_state_t state)
 	error = disable_nonboot_cpus();
 	if (!error && !suspend_test(TEST_CPUS))
 	{
+		struct regulator* reg_ldo1 = regulator_get(NULL, "LDO1");
+
 		enable_irq_wake(MXC_INT_KPP);
 		enable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_KEY_ROW5));
 		if (state == PM_SUSPEND_IDLE)
@@ -368,7 +371,16 @@ int suspend_devices_and_enter(suspend_state_t state)
 			suspend_specific_platform_device("mxc_keypad", PMSG_SUSPEND);
 		}
 
+		if (reg_ldo1 != NULL && !IS_ERR(reg_ldo1))
+			regulator_set_voltage(reg_ldo1, 1800000);
+
 		suspend_enter(state);
+
+		if (reg_ldo1 != NULL && !IS_ERR(reg_ldo1))
+		{
+			regulator_set_voltage(reg_ldo1, 3300000);
+			regulator_put(reg_ldo1, NULL);
+		}
 
 		if (state == PM_SUSPEND_IDLE)
 		{
