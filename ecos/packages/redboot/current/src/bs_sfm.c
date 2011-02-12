@@ -15,6 +15,25 @@
 #include "bs_sfm.h"
 
 
+#define INIT_PWR_SAVE_MODE  0x0000
+
+#define INIT_PLL_CFG_0  0x0004
+#define INIT_PLL_CFG_1  0x5949
+#define INIT_PLL_CFG_2  0x0040
+#define INIT_CLK_CFG    0x0000
+
+#define INIT_SPI_FLASH_ACC_MODE  0 // access mode select
+#define INIT_SPI_FLASH_RDC_MODE  0 // read command select
+#define INIT_SPI_FLASH_CLK_DIV   3  // clock divider
+#define INIT_SPI_FLASH_CLK_PHS   0 // clock phase select
+#define INIT_SPI_FLASH_CLK_POL   0 // clock polarity select
+#define INIT_SPI_FLASH_ENB       1 // enable
+#define INIT_SPI_FLASH_CTL      ( INIT_SPI_FLASH_ACC_MODE << 7 ) | ( INIT_SPI_FLASH_RDC_MODE << 6 ) | ( INIT_SPI_FLASH_CLK_DIV << 3 ) | ( INIT_SPI_FLASH_CLK_PHS << 2 ) | ( INIT_SPI_FLASH_CLK_POL << 1 ) | INIT_SPI_FLASH_ENB
+
+#define INIT_SPI_FLASH_CS_ENB  1
+#define INIT_SPI_FLASH_CSC  INIT_SPI_FLASH_CS_ENB
+
+
 static int sfm_cd;
 
 
@@ -24,6 +43,26 @@ void bs_sfm_wait_for_bit( int ra, int pos, int val )
   while ( ( ( v >> pos ) & 0x1 ) != ( val & 0x1 ) ) v = BSC_RD_REG( ra );
 }
 
+void bs_sfm_init(void)
+{
+    // init pll
+    BSC_WR_REG( 0x006, 0x0000 );
+    BSC_WR_REG( 0x010, INIT_PLL_CFG_0 );
+    BSC_WR_REG( 0x012, INIT_PLL_CFG_1 );
+    BSC_WR_REG( 0x014, INIT_PLL_CFG_2 );
+    BSC_WR_REG( 0x016, INIT_CLK_CFG );
+    int v = BSC_RD_REG( 0x00A );
+    while ( ( v & 0x1 ) == 0 ) v = BSC_RD_REG( 0x00A );
+    v = BSC_RD_REG( 0x006 );
+    BSC_WR_REG( 0x006, v & ~0x1 );
+
+
+    BSC_WR_REG( 0x106, 0x0203 );
+
+    // init_spi
+    BSC_WR_REG( 0x204, INIT_SPI_FLASH_CTL );
+    BSC_WR_REG( 0x208, INIT_SPI_FLASH_CSC );
+}
 
 void bs_sfm_start( void )
 {

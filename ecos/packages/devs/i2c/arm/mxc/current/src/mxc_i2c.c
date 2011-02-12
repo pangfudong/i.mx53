@@ -524,6 +524,20 @@ int enable_3971_ldo5(int enable)
         return -1;
     }
     diag_printf("Change voltage to 3V done\n");
+
+    rq.dev_addr = 0x34;
+    rq.reg_addr = 0x23;
+    rq.reg_addr_sz = 1;
+    g_dev_value[0] = 0xd;
+    rq.buffer = g_dev_value;
+    rq.buffer_sz = 1;
+    if (i2c_xfer(g_i2c_nr, &rq, I2C_WRITE) != 0)
+    {
+        diag_printf("Could not change core voltage to 1.4V.\n");
+        return -1;
+    }
+    diag_printf("Change core voltage to 1.4V done\n");
+
     return 0;
 
 }

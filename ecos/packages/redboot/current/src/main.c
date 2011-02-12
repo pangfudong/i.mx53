@@ -108,6 +108,7 @@ static void * saved_context;
 // Status returned after trampoline execution
 static int return_status;
 
+static int check_update_from_wf_flash(void);
 
 // CLI command processing (defined in this file)
 RedBoot_cmd("version",
@@ -289,8 +290,9 @@ static void read_sysconfig(struct onyx_sysconfig* cfg)
 }
 
 extern void rebuild_bbt(void);
-void onyx_program_blk(u32 blk_index, u32 buf, u32 len, u8 with_spare);
+extern void onyx_program_blk(u32 blk_index, u32 buf, u32 len, u8 with_spare);
 extern void program_wfm_flash(int addr, int size, char * data);
+extern void read_wfm_flash(int addr, int size, unsigned char *data);
 extern void program_sysconfig(u32 buf, u32 len);
 
 static void usb_rx(cyg_uint8* buf, cyg_uint32 len)
@@ -425,18 +427,9 @@ static void eink_init(struct onyx_sysconfig* cfg, int want_update)
     }
 
     unsigned char* tmp = malloc(cfg->x_pixels * cfg->y_pixels);
-/*
-    memset(tmp, 0xff, cfg->x_pixels * cfg->y_pixels);
-    bs_cmd_ld_img_area_data_with_stride( 3, 0, 0, cfg->x_pixels, cfg->y_pixels, tmp, cfg->x_pixels);
-    bs_cmd_wr_reg(0x334, 5);
-    bs_cmd_wait_for_bit( 0x338, 0, 0 );
-    bs_cmd_wait_for_bit( 0x338, 3, 0 );
-    diag_printf("write reg 0x334, 5\n");
-*/
-
     flash_read((void *)0x100000, tmp, cfg->x_pixels * cfg->y_pixels, (void **)&err_addr);
 
-    if (want_update)
+    if (want_update > 0)
     {
         // Show "Software update request detected, checking updates..."
         memset(tmp + (cfg->y_pixels - UPDIMG_HEIGHT - 4) * cfg->x_pixels, 0xFF, (UPDIMG_HEIGHT + 4) * cfg->x_pixels);
@@ -467,6 +460,35 @@ static void eink_init(struct onyx_sysconfig* cfg, int want_update)
 
 extern int get_voltage(unsigned int dev_addr, unsigned int reg_addr);
 extern int enable_3971_ldo5(int);
+
+int check_update_from_wf_flash(void)
+{
+    diag_printf("Check firmware update from waveform flash.\n");
+    static const unsigned char magic[] = {"70ecc3ffbf9a71768b4a8638021d606a"};
+    static const int size = 31;
+    unsigned char data[size];
+    static const int addr = 200 * 1024;
+    int i;
+
+    for(i = 0; i < size; ++i)
+    {
+        data[i] = 0;
+    }
+
+    read_wfm_flash(addr, size - 1, data);
+    diag_printf("data from waveform flash %s\n", data);
+
+    for(i = 0; i < size - 1; ++i)
+    {
+        if (data[i] != magic[i])
+        {
+            return 0;
+        }
+    }
+
+    diag_printf("firmware update detected from waveform flash.");
+    return 1;
+}
 
 //
 // This is the main entry point for RedBoot
@@ -588,7 +610,7 @@ cyg_start(void)
         res = get_voltage(0x54, 0x0);
         if (res == -1)
         {
-            // Read battery voltage from bq27510 
+            // Read battery voltage from bq27510
             res = get_voltage(0x55, 0x08);
         }
     }
@@ -640,13 +662,21 @@ cyg_start(void)
 
     // Initialize e-ink screen.
     read_sysconfig(&sys_cfg);
+    if (sys_cfg.grayscale == 16)
+    {
+        if (check_update_from_wf_flash() > 0)
+        {
+            want_update = 2;
+        }
+    }
+
     eink_init(&sys_cfg, want_update);
 
     diag_sprintf(script, "fis load %s\nexec -b 0x100000 -l 0x%x -c \"noinitrd "
-        "console=ttymxc0,115200 root=/dev/mtdblock4 rootfstype=yaffs2 video=%d*%d:%d init=/linuxrc\"\n",
+        "console=ttymxc0,115200 root=/dev/mtdblock4 rootfstype=yaffs2 video=%d*%d:%d init=/linuxrc want_update=%d\"\n",
         want_update ? "initramfs" : "kernel",
         want_update ? 0x300000 : 0x200000,
-        sys_cfg.x_pixels, sys_cfg.y_pixels, sys_cfg.grayscale);
+        sys_cfg.x_pixels, sys_cfg.y_pixels, sys_cfg.grayscale, want_update);
 
 #ifdef CYGFUN_REDBOOT_BOOT_SCRIPT
 # ifdef CYGDAT_REDBOOT_DEFAULT_BOOT_SCRIPT

@@ -169,4 +169,23 @@ void program_wfm_flash(int addr, int size, char * data)
 }
 #endif
 
+void read_wfm_flash(int addr, int size, unsigned char * data)
+{
+    bs_chip_init();
+    init_gpio();
+
+    init();
+    bs_sfm_start( );
+    DBG( "... staring sfm access\n" );
+
+    int es = bs_sfm_esig( );
+    if ( es != BS_SFM_ESIG && es != 0x12)
+      DBG( "[%s] !!! ERROR: invalid sfm electronic signature (0x%02x) --- 0x%02x expected\n", pname, es, BS_SFM_ESIG );
+    DBG( "... sfm esig=0x%02x\n", es );
+    bs_sfm_read(addr, size, data);
+
+    DBG( "... ending sfm access\n" );
+    bs_sfm_end( );
+}
+
 // end of file

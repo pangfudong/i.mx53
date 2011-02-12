@@ -11,6 +11,8 @@
 
 // functions
 
+extern void bs_sfm_init(void);
+
 extern void bs_sfm_start( void );
 extern void bs_sfm_end( void );
 
