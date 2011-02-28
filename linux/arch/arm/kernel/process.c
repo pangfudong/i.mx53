@@ -331,7 +331,18 @@ static ssize_t watchdog_show(struct kobject *kobj,
 static ssize_t watchdog_store(struct kobject *kobj,
 	struct kobj_attribute *attr, const char *buf, size_t n)
 {
-	if (sscanf(buf, "%d", &clear_at_poweroff) == 1) {
+	int val;
+
+	if (sscanf(buf, "%d", &val) == 1) {
+		watchdog_on = !!val;
+		if (watchdog_on)
+		{
+			start_watchdog();
+		}
+		else
+		{
+			stop_watchdog();
+		}
 		return n;
 	}
 	return -EINVAL;
