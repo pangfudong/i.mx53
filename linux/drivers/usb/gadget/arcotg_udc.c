@@ -298,6 +298,9 @@ static int dr_controller_setup(struct fsl_udc *udc)
 
 	/* Config PHY interface */
 	portctrl = fsl_readl(&dr_regs->portsc1);
+#if defined(CONFIG_FORCE_FULL_SPEED)
+	portctrl |= PORTSCX_PORT_FORCE_FULL_SPEED;
+#endif
 	portctrl &= ~(PORTSCX_PHY_TYPE_SEL | PORTSCX_PORT_WIDTH);
 	switch (udc->phy_mode) {
 	case FSL_USB2_PHY_ULPI:

@@ -338,6 +338,10 @@ config USB_ARC
 	default USB_GADGET
 	select USB_GADGET_SELECTED
 
+config FORCE_FULL_SPEED
+	bool "Use full speed only for device mode"
+	depends on USB_ARC
+
 config USB_GADGET_S3C2410
 	boolean "S3C2410 USB Device Controller"
 	depends on ARCH_S3C2410
