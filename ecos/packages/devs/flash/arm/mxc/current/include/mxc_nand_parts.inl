@@ -304,7 +304,6 @@
         device_id3 : 0xec78,
         device_id4 : 0xFFFF,
         page_size  : 512*8,
-//        row_cycle  : 3,
         spare_size : 16*8,
         pages_per_block : 128,
         block_size : 128*4*1024,
