@@ -215,6 +215,48 @@
         vendor_info: "Samsung K9F2G08R0A 8-bit 2K page 256MB",
     },
     {
+        device_id  : 0xDCEC, // Samsung K9F4G08U0A 8-bit 2K page 512M (4Gb) nand
+        device_id2 : 0x9510,
+        device_id3 : 0xEC54,
+        device_id4 : 0xFFFF,
+        page_size  : 512*4,
+        spare_size : 16*4,
+        pages_per_block : 64,
+        block_size : 64*2*1024,
+        block_count: 4096,
+        device_size: 0x20000000,
+        base_mask  : ~(0x20000000 - 1),
+        port_size  : MXC_NAND_8_BIT,
+        type       : NAND_SLC,
+        fis_start_addr: 0x80000,       // first 0.5MB reserved for Redboot
+        bbt_blk_max_nr: 4,      // reserve 4 blocks for the bad block tables
+            // BI is fixed at 5th byte in the spare area. This value is not used
+        bi_off     : 0,
+        options    : NAND_BBT_SCAN1STPAGE | NAND_BBT_SCAN2NDPAGE,
+        vendor_info: "Samsung K9F4G08U0A 8-bit 2K page 512M (4Gb) nand",
+    },
+    {
+        device_id  : 0xD3EC, // Samsung K9K8G08U0B 8-bit 2K page 1G (8Gb) nand
+        device_id2 : 0x9551,
+        device_id3 : 0x0058,
+        device_id4 : 0xE152,
+        page_size  : 512*4,
+        spare_size : 16*4,
+        pages_per_block : 64,
+        block_size : 64*2*1024,
+        block_count: 8192,
+        device_size: 0x40000000,
+        base_mask  : ~(0x40000000 - 1),
+        port_size  : MXC_NAND_8_BIT,
+        type       : NAND_SLC,
+        options    : NAND_BBT_SCAN1STPAGE | NAND_BBT_SCAN2NDPAGE,
+        fis_start_addr: 0x80000,       // first 0.5MB reserved for Redboot
+        bbt_blk_max_nr: 4,      // reserve 4 blocks for the bad block tables
+            // BI is fixed at 5th byte in the spare area. This value is not used
+        bi_off     : 0,
+        vendor_info: "Samsung K9K8G08U0B 8-bit 2K page 1G (8Gb) nand",
+    },
+    {
         device_id  : 0xd5ec, // Samsung K9LAG08U0M (2KB page 2G x 8 bit MLC nand)
         device_id2 : 0x2555,
         device_id3 : 0xFFFF,
@@ -336,47 +378,4 @@
         type       : NAND_MLC,
         vendor_info: "Micron 29F32G08TAA 16-bit 2K page 4GB (32Gb) nand",
     },
-    {
-        device_id  : 0xD3EC, // Samsung K9K8G08U0B 8-bit 2K page 1G (8Gb) nand
-        device_id2 : 0x9551,
-        device_id3 : 0x0058,
-        device_id4 : 0xE152,
-        page_size  : 512*4,
-        spare_size : 16*4,
-        pages_per_block : 64,
-        block_size : 64*2*1024,
-        block_count: 8192,
-        device_size: 0x40000000,
-        base_mask  : ~(0x40000000 - 1),
-        port_size  : MXC_NAND_8_BIT,
-        type       : NAND_SLC,
-        options    : NAND_BBT_SCAN1STPAGE | NAND_BBT_SCAN2NDPAGE,
-        fis_start_addr: 0x80000,       // first 0.5MB reserved for Redboot
-        bbt_blk_max_nr: 4,      // reserve 4 blocks for the bad block tables
-            // BI is fixed at 5th byte in the spare area. This value is not used
-        bi_off     : 0,
-        vendor_info: "Samsung K9K8G08U0B 8-bit 2K page 1G (8Gb) nand",
-    },
-    {
-        device_id  : 0xDCEC, // Samsung K9F4G08U0A 8-bit 2K page 512M (4Gb) nand
-        device_id2 : 0x9510,
-        device_id3 : 0xEC54,
-        device_id4 : 0xFFFF,
-        page_size  : 512*4,
-        spare_size : 16*4,
-        pages_per_block : 64,
-        block_size : 64*2*1024,
-        block_count: 4096,
-        device_size: 0x20000000,
-        base_mask  : ~(0x20000000 - 1),
-        port_size  : MXC_NAND_8_BIT,
-        type       : NAND_SLC,
-        options    : NAND_BBT_SCAN1STPAGE | NAND_BBT_SCAN2NDPAGE,
-        fis_start_addr: 0x80000,       // first 0.5MB reserved for Redboot
-        bbt_blk_max_nr: 4,      // reserve 4 blocks for the bad block tables
-            // BI is fixed at 5th byte in the spare area. This value is not used
-        bi_off     : 0,
-        vendor_info: "Samsung K9F4G08U0A 8-bit 2K page 512M (4Gb) nand",
-    },
-
 #endif // CYGONCE_DEVS_FLASH_MXC_NAND_PARTS_INL
