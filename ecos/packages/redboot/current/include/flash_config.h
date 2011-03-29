@@ -110,7 +110,7 @@ struct _config {
 struct onyx_sysconfig
 {
 	unsigned char version[16];
-	unsigned int  program_time;
+	int           vcom;
 	unsigned char serial_no[16];
 	unsigned char dev_id[16];
 	unsigned int  screen_size;    /* 60, 80, 97 */
