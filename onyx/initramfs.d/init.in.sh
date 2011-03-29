@@ -90,11 +90,9 @@ insmod /lib/modules/mmc_block.ko
 retry_count=0
 while [ $retry_count -lt 5 ]
 do
-  if [ -b "/dev/mmcblk0p1" ]; then
-    mount -t vfat /dev/mmcblk0p1 /mnt/mmc
-    if [ $? = 0 ]; then
-      break
-    fi
+  mount -t vfat /dev/mmcblk0p1 /mnt/mmc
+  if [ $? = 0 ]; then
+    break
   fi
   sleep 1
   retry_count=`expr $retry_count + 1`
@@ -103,16 +101,16 @@ done
 if [ $retry_count -lt 5 ]; then
   check_update
   umount /mnt/mmc
-elif [ -b "/dev/mmcblk0" ]; then
+else
   mount -t vfat /dev/mmcblk0 /mnt/mmc
   if [ $? = 0 ]; then
     check_update
     umount /mnt/mmc
+  else
+    # No sd card in slot
+    echo "Mount SD card failed"
+    disp_msg /bin/no_updates.dat
   fi
-else
-  # No sd card in slot
-  echo "Mount SD card failed"
-  disp_msg /bin/no_updates.dat
 fi
 
 # Start normal boot process.
