@@ -143,6 +143,7 @@ static struct gpio_key_map gpio_keys[] =
 #endif
 	{ MX31_PIN_KEY_ROW4, KEY_F21 },    /* USB connection indicator */
 	{ MX31_PIN_SRXD5,    KEY_F20 },    /* 3G power switch */
+	{ MX31_PIN_RI_DCE1,  KEY_F19 },    /* WiFi power switch */
 };
 
 static void (*jack_handler)(int) = NULL;

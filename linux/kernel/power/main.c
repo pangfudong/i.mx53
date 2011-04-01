@@ -366,6 +366,7 @@ int suspend_devices_and_enter(suspend_state_t state)
 #if defined(CONFIG_ENABLE_JACK_DETECT)
 			enable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_DTR_DCE1));
 #endif
+			enable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_RI_DCE1));
 			/* For issue: if there is a key pressed before entering idle mode,
 			   the keyboard will be disfunctional after resuming from idle. */
 			suspend_specific_platform_device("mxc_keypad", PMSG_SUSPEND);
@@ -392,6 +393,7 @@ int suspend_devices_and_enter(suspend_state_t state)
 #if defined(CONFIG_ENABLE_JACK_DETECT)
 			disable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_DTR_DCE1));
 #endif
+			disable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_RI_DCE1));
 		}
 		disable_irq_wake(IOMUX_TO_IRQ(MX31_PIN_KEY_ROW5));
 		disable_irq_wake(MXC_INT_KPP);
