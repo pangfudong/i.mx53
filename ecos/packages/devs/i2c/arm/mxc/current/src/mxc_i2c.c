@@ -566,7 +566,7 @@ int get_voltage(unsigned int dev_addr, unsigned int reg_addr)
         case 0x55:
             return (g_dev_value[1] << 8) | g_dev_value[0];
         case 0x54:
-            return ((g_dev_value[0] << 4) | (g_dev_value[1] >> 4)) * 4220 / 247;
+            return ((g_dev_value[0] << 4) | (g_dev_value[1] >> 4)) * 4217 / 233;
         default:
             return -1;
     }
