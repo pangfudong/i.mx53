@@ -624,6 +624,9 @@ cyg_start(void)
         mxc_request_iomux(MX31_PIN_KEY_ROW6, OUTPUTCONFIG_GPIO, INPUTCONFIG_GPIO);
         mxc_set_gpio_direction(MX31_PIN_KEY_ROW6, 0);
         mxc_set_gpio_dataout(MX31_PIN_KEY_ROW6, 0);
+
+        power_on_led();
+        while (1);
     }
 
     // Power on green LED
