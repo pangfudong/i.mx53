@@ -70,10 +70,6 @@ void bs60_flash( void )
     //bs_cmd_wait_dspe_frend( );
     bs_cmd_wait_for_bit( 0x338, 0, 0 );
     bs_cmd_wait_for_bit( 0x338, 3, 0 );
-
-    bs60_ld_value( 0xFF );
-    bs_cmd_upd_init( );
-    bs_cmd_wait_dspe_trg( );
 }
 
 void bs60_init( int wa )
@@ -116,7 +112,7 @@ void bs60_init( int wa )
 
     bs_cmd_set_lut_auto_sel_mode(0); // make sure auto-lut mode is off
     bs_cmd_set_rotmode(3);  // set rotation mode
-    bs60_white();
+    bs60_flash();
 }
 
 #ifdef USER_SPACE

@@ -615,7 +615,7 @@ cyg_start(void)
         }
     }
     diag_printf("Voltage = %dmV\n", res);
-    if (res < 3400 && res > 0)
+    while (res < 3400 && res > 0)
     {
         /* Power off */
         enable_3971_ldo5(0);
@@ -626,7 +626,6 @@ cyg_start(void)
         mxc_set_gpio_dataout(MX31_PIN_KEY_ROW6, 0);
 
         power_on_led();
-        while (1);
     }
 
     // Power on green LED
