@@ -65,9 +65,11 @@ void bs60_flash( void )
     bs_cmd_wait_for_bit( 0x338, 0, 0 );
     bs_cmd_wait_for_bit( 0x338, 3, 0 );
 
-    bs_cmd_upd_full( 0, 0, 0 );
-    //bs_cmd_wait_dspe_trg( );
-    //bs_cmd_wait_dspe_frend( );
+    bs60_ld_value( 0xFF );
+    bs_cmd_upd_init( );
+    bs_cmd_wait_dspe_trg( );
+
+    bs_cmd_upd_full( 3, 0, 0 );
     bs_cmd_wait_for_bit( 0x338, 0, 0 );
     bs_cmd_wait_for_bit( 0x338, 3, 0 );
 }
