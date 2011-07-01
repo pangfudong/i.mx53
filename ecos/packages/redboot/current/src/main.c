@@ -398,11 +398,11 @@ static void usb_rx(cyg_uint8* buf, cyg_uint32 len)
     }
 }
 
-static void power_on_led(void)
+static void power_on_led(int on)
 {
     mxc_request_iomux(MX31_PIN_GPIO1_4, OUTPUTCONFIG_GPIO, INPUTCONFIG_GPIO);
     mxc_set_gpio_direction(MX31_PIN_GPIO1_4, 0);
-    mxc_set_gpio_dataout(MX31_PIN_GPIO1_4, 1);
+    mxc_set_gpio_dataout(MX31_PIN_GPIO1_4, on);
 }
 
 
@@ -617,17 +617,28 @@ cyg_start(void)
     diag_printf("Voltage = %dmV\n", res);
     if (res < 3400 && res > 0)
     {
-        /* Power off */
-        enable_3971_ldo5(0);
+        for (i = 0; i < 3; i++)
+        {
+            power_on_led(1);
+            _sleep(500);
+            power_on_led(0);
+            _sleep(500);
+        }
 
-        /* Power off device */
-        mxc_request_iomux(MX31_PIN_KEY_ROW6, OUTPUTCONFIG_GPIO, INPUTCONFIG_GPIO);
-        mxc_set_gpio_direction(MX31_PIN_KEY_ROW6, 0);
-        mxc_set_gpio_dataout(MX31_PIN_KEY_ROW6, 0);
+        while (1)
+        {
+            /* Power off */
+            enable_3971_ldo5(0);
+
+            /* Power off device */
+            mxc_request_iomux(MX31_PIN_KEY_ROW6, OUTPUTCONFIG_GPIO, INPUTCONFIG_GPIO);
+            mxc_set_gpio_direction(MX31_PIN_KEY_ROW6, 0);
+            mxc_set_gpio_dataout(MX31_PIN_KEY_ROW6, 0);
+        }
     }
 
     // Power on green LED
-    power_on_led();
+    power_on_led(1);
 
     // Detect key press event.
     mxc_kpp_init();
