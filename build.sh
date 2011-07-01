@@ -6,6 +6,7 @@ kernel_config=onyx_defconfig
 initramfs_config=onyx_initramfs_defconfig
 aes_password="a8wZ49?b"
 init_config=default
+update_package_name="onyx_update.upd update.upd"
 
 while [ $# -gt 0 ]
 do
@@ -28,12 +29,18 @@ do
             shift 2
             ;;
 
+        --update-package-name)
+            update_package_name=$2
+            shift 2
+            ;;
+
         *)
             echo "Invalid arguement: $1"
             echo "Valid arguments are"
             echo "--config-prefix prefix: Prefix of the kernel config files."
             echo "--aes-password password: The password used to encrypt update packages."
             echo "--init-config name: The configuration to prepend to the init script."
+            echo "--update-package-name name (or prefix): The update package configuration to prepend to the init script."
             exit 1
             ;;
     esac
@@ -75,6 +82,10 @@ cat "${INIT_SCRIPT_MAIN_PATH}" >> "${INIT_SCRIPT_PATH}"
 
 echo "Updating password in ${INIT_SCRIPT_PATH}"
 sed -i "s/__AES_PASSWORD__/${aes_password}/" "${INIT_SCRIPT_PATH}"
+
+echo "Updating update package name in ${INIT_SCRIPT_PATH}"
+sed -i "s/UPDATE_PACKAGE_NAME/${update_package_name}/" "${INIT_SCRIPT_PATH}"
+
 
 sed "s|REPO_DIR|$REPO_DIR|" "$KERNEL_DIR/arch/arm/configs/${initramfs_config}.in" \
     > "$KERNEL_DIR/arch/arm/configs/${initramfs_config}"
