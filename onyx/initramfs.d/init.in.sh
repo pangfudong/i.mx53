@@ -8,7 +8,7 @@ check_update()
   update_pkg=""
   for i in $accepted_pkgs
   do
-      if [[ $i == *.upd ]]; then
+      if [ "$i" = "onyx_update.upd" ] || [ "$i" = "update.upd" ]; then
           if [ -f $MMC_DIR/$i ]; then
               update_pkg=$MMC_DIR/$i
               break;
