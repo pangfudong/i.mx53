@@ -437,11 +437,6 @@ static void __init mxc_board_init(void)
 	early_console_setup(saved_command_line);
 	mxc_init_devices();
 
-	/* Pull up GPIO1_6 */
-	mxc_iomux_set_pad(MX31_PIN_GPIO1_6,
-		  (PAD_CTL_DRV_HIGH | PAD_CTL_SRE_FAST
-		  | PAD_CTL_PKE_ENABLE | PAD_CTL_PUE_PUD | PAD_CTL_47K_PU));
-
 	/*Pull down MX31_PIN_USB_BYP to reset USB3317 */
 	mxc_request_iomux(MX31_PIN_USB_BYP, OUTPUTCONFIG_GPIO,
 			  INPUTCONFIG_NONE);

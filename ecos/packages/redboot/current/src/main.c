@@ -613,6 +613,11 @@ cyg_start(void)
             // Read battery voltage from bq27510
             res = get_voltage(0x55, 0x08);
         }
+        else
+        {
+            /* Workaround for bebook issue: voltage read > actual */
+            res -= 100;
+        }
     }
     diag_printf("Voltage = %dmV\n", res);
     if (res < 3400 && res > 0)
