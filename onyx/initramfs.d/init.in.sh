@@ -1,15 +1,29 @@
-accepted_pkgs="onyx_update.upd update.upd"
+accepted_pkgs="UPDATE_PACKAGE_NAME"
 init=/linuxrc
+
+MMC_DIR=/mnt/mmc
 
 check_update()
 {
   update_pkg=""
   for i in $accepted_pkgs
   do
-    if [ -f /mnt/mmc/$i ]; then
-      update_pkg=/mnt/mmc/$i
-      break;
-    fi
+      if [ "$i" = "onyx_update.upd" ] || [ "$i" = "update.upd" ]; then
+          if [ -f $MMC_DIR/$i ]; then
+              update_pkg=$MMC_DIR/$i
+              break;
+          fi
+      else
+          for j in `ls $MMC_DIR/$i*.upd | xargs -n1 basename`
+          do
+              vmax="0"
+              gen=`echo $j | sed "s/$i//" | sed "s/.upd//"`
+              if [[ "$gen" > "$vmax" ]]; then
+                  vmax="$gen"
+                  update_pkg=$MMC_DIR/$j
+              fi
+          done
+      fi
   done
 
   if [ -n $update_pkg ]; then
