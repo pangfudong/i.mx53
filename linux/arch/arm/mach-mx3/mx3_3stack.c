@@ -172,7 +172,7 @@ static struct mtd_partition mxc_nand_partitions[] = {
 #if defined(CONFIG_MTD_8G_NAND_FLASH)
 	 .size = 694 * 1024 * 1024},
 #else
-	 .size = 312 * 1024 * 1024},
+	 .size = MTDPART_SIZ_FULL},
 #endif
 };
 

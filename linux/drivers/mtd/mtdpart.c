@@ -424,7 +424,7 @@ int add_mtd_partitions(struct mtd_info *master,
 			}
 		}
 		if (slave->mtd.size == MTDPART_SIZ_FULL)
-			slave->mtd.size = master->size - slave->offset;
+			slave->mtd.size = master->size - slave->offset - 0x100000;
 		cur_offset = slave->offset + slave->mtd.size;
 
 		printk (KERN_NOTICE "0x%08x-0x%08x : \"%s\"\n", slave->offset,
